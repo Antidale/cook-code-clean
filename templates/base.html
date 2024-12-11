@@ -7,22 +7,30 @@
     <title>Antidale</title>
 </head>
 
-<body>
-    <header>
-        <div class="flex-container">
-            <h1>Antidale.com</h1>
-            <div class="item-end">
-                <a href="/">Home</a>
-                <a href="{{ get_url(path='@/blog/_index.md') }}">Posts</a>
-            </div>
-        </div>
-
+<body class="container">
+    <header class="header">
+        <h1>Antidale.com</h1>
     </header>
-    <section class="section">
-        <div class="container">
-            {% block content %} {% endblock %}
-        </div>
+
+    <main class="content">
+        {% block content %} {% endblock %}
+    </main>
+    <section class="sidebar">
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="{{ get_url(path='@/blog/_index.md') }}">Posts</a>
+            </li>
+        </ul>
     </section>
 </body>
+<footer class="footer">
+    Site built with <a href="https://www.getzola.org/documentation/content/overview/">Zola</a>.
+    <p>
+        &copy; 2024 by me.
+    </p>
+</footer>
 
 </html>
