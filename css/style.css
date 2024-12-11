@@ -1,0 +1,12 @@
+.flex-container {
+    display: flex;
+    width: 80%;
+    border: 2px black;
+    justify-content: space-between;
+    align-items: flex-start;
+    vertical-align: top;
+}
+
+.item-end {
+    align-self: flex-end;
+}
