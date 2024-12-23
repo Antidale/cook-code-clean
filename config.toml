@@ -11,7 +11,8 @@ build_search_index = false
 
 generate_feeds = true
 feed_filenames = ["atom.xml"]
-
+title = "cook. code. clean."
+description = "Some notes on a journey"
 author = "Some Person"
 
 [markdown]
