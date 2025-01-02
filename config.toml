@@ -9,6 +9,11 @@ compile_sass = true
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = false
 
+#Taxonomy Section
+taxonomies = [
+    { name = "tags", render=false, feed=true }
+]
+
 generate_feeds = true
 feed_filenames = ["atom.xml"]
 title = "cook. code. clean."
@@ -18,7 +23,9 @@ author = "Some Person"
 [markdown]
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
-highlight_code = false
+highlight_code = true
 
 [extra]
 # Put all your custom variables here
+
+

@@ -1,6 +1,8 @@
 +++
 title = "tools"
 date = 2024-12-13
+[taxonomies]
+tags=["cook","tools"]
 +++
 
 <img src="../lightbulb.jpg" />

@@ -1,6 +1,8 @@
 +++
 title = "Rice Cooker Quinoa"
 date = 2024-12-17 22:25:00-08:00
+[taxonomies]
+tags=["cook","recipe"]
 +++
 
 I made a quick "just kinda toss things together" late snack that I want to write down so I can remember it later (I mean, I'm also going to toss this into [Paprika](https://www.paprikaapp.com/), but this way I can share it a little more easily). 

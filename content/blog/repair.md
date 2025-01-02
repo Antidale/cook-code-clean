@@ -1,6 +1,8 @@
 +++
 title = "repair"
 date = 2024-12-10
+[taxonomies]
+tags=["cook","tools"]
 +++
 
 <img src="../broken_element.jpg" width="100" />
