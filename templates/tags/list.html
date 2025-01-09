@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+<h2>Tags</h2>
+{% block content %}
+{% if terms %}
+<ul id="tax_list">
+    {% for term in terms %}
+    <li>
+        <a href="{{ term.permalink | safe }}">{{ term.name }}</a>&nbsp;[{{ term.pages | length }}]
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock content %}

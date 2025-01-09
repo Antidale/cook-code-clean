@@ -4,6 +4,13 @@
 <h1 class="title">
     {{ page.title }}
 </h1>
-<p class="subtitle"><strong>{{ page.date }}</strong></p>
+<p class="subtitle">
+    <strong>{{ page.date }}</strong>
+    {% if page.taxonomies.tags %}
+    {% for tag in page.taxonomies.tags %}
+    <a href="/tags/{{tag}}">{{tag}}</a>
+    {% endfor %}
+    {% endif %}
+</p>
 {{ page.content | safe }}
 {% endblock content %}
