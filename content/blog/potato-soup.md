@@ -1,6 +1,8 @@
 +++
 title = "Potato Soup"
 date = 2024-12-22
+[taxonomies]
+tags=["cook","recipe"]
 +++
 
 A recipe very lightly adapted from [Our Balanced Bowl](https://ourbalancedbowl.com/wprm_print/loaded-baked-potato-chowder).
