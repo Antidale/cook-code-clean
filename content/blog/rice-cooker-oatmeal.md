@@ -9,18 +9,18 @@ This is a nice recipe for getting your rice cooker to make you breakfast, and ma
 
 ### Ingredients
 #### Base
-1 "cup" steel-cut oats
-4 "cups" water
-2 tbsp chia seeds
-pinch salt
-1 to 2 tbsp dried cherries (or other dried fruit bits)
+* 1 "cup" steel-cut oats
+* 4 "cups" water
+* 2 tbsp chia seeds
+* pinch salt
+* 1 to 2 tbsp dried cherries (or other dried fruit bits)
 
 #### Extras
-splash of almond extract
-pinch of vanilla powder (or splash of vanilla extract)
-up to 1/4 C milk-substance (cream, various non-dairy milks, whatever you want, or not)
-1 tbsp peanut butter powder
-1/2 to 1 tsp cinnamon or pie spice blend
+* splash of almond extract
+* pinch of vanilla powder (or splash of vanilla extract)
+* up to 1/4 C milk-substance (cream, various non-dairy milks, whatever you want, or not)
+* 1 tbsp peanut butter powder
+* 1/2 to 1 tsp cinnamon or pie spice blend
 
 ### Directions
 Take the ingredients in the Base section and put in them in the rice cooker, and stir it about a bit. The "cup" measurement uses the cup provided with the cooker, which is roughly 3/4 C. Set the cooker's mode to Porridge and start it (or set the timer, if setting up overnight).
