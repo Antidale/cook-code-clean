@@ -7,7 +7,7 @@ tags=["cook","recipe"]
 
 <img src="../gochujang_alfredo.jpg" width="300" />
 
-## Ingredients
+### Ingredients
 * 5 garlic cloves
 * 2-3 green onions
 * 1 cup (50g) freshly grated Parmigiano-Reggiano cheese, plus more to serve
@@ -21,16 +21,16 @@ tags=["cook","recipe"]
 * 1 tbsp oyster sauce
 * Black pepper, to serve
 
-## Instructions
+### Instructions
 
-### Prep
+#### Prep
 1. Finely chop the garlic cloves. Thinly slice the green onions, separating the whites and greens.
 
 2. Grate about 1 cup (or 50 grams) of Parmigiano-Reggiano.
 
 3. Combine all the seasonings (gochujang, gochugaru, oyster sauce) in a small container and mix well.
 
-### Cooking
+#### Cooking
 
 1. Bring a pot of salted water to a boil. Add the pasta and cook according to the package instructions or until al dente. (Reserve at least 1/4 cup of the pasta cooking water).
 
@@ -46,7 +46,7 @@ tags=["cook","recipe"]
 
 [Recipe Source](https://aaronandclaire.com/creamy-gochujang-pasta/#wpzoom-recipe-card) - [Recipe Video](https://www.youtube.com/watch?v=hEE01jL1qXw&vl=en)
 
-## Notes
+### Notes
 I didn't have any gochugaru when I made this the first time, and substituting 1 tsp Aleppo pepper and 1tsp paprika was very tasty. I also used closer to 4tbsp of butter, just to finish off the stick. 
 
 The original recipe only calls for 6oz pasta, but that feels to me like way too little for the amount of sauce that gets made with this, and I did not come close to adding a full 1/4 C of pasta water.

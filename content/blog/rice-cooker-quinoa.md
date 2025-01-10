@@ -75,6 +75,6 @@ I was cooking this in a [carbon steel](https://www.stratacookware.com/product-pa
 
 If you want to bulk this out a bit, some sort of canned beans (rinsed/drained) added to the veggies would be good, and peas would be good, too. 
 
-Extras should freeze well (I'll know sometime tomorrow), so upping the amounts to make a bunch at once seems easy enough and a good idea.
+Extras freeze well, so make as big a batch as your rice cooker allows, and give future you a nice easy side to reheat.
 
 If you don't have a rice cooker, I'd probably do something along the lines of an America's Test Kitchen quinoa pilaf recipe, and do some extra work toasting the rinsed quinoa, setting it aside, then doing veggies, and adding the quinoa back into the mix when adding the water/stock. For me, I'm trying to build up the seasoning on the pan, and have been enjoying using my rice cooker a lot, both of which informed my choices.
