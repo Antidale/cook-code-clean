@@ -16,9 +16,9 @@ taxonomies = [
 
 generate_feeds = true
 feed_filenames = ["atom.xml"]
-title = "cook. code. clean."
-description = "Some notes on a journey"
-author = "Some Person"
+title = "cook. code."
+description = "[tbd]"
+author = "Antidale"
 
 [markdown]
 # Whether to do syntax highlighting
