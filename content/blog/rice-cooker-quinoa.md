@@ -34,9 +34,7 @@ Pardon me while I try out some recipe formats over the next while. Because this 
 * 1 tsp soy sauce
 * 1/4 tsp [Balti Seasoning](https://www.penzeys.com/online-catalog/balti-seasoning/c-24/p-126/pd-s)
 
-Put all this in the rice cooker, set to Quick (for me and my NS-ZCC10 model of Zojirushi's Fuzzy Logic cooker, follow your own model's instructions), and let the cooker do it's thing. While that's going, it's time to sauté.
-
-I was cooking this in a seasone up some veggies to go with the quinoa.
+Put all this in the rice cooker, set to Quick (for me and my NS-ZCC10 model of Zojirushi's Fuzzy Logic cooker, follow your own model's instructions), and let the cooker do it's thing. While that's going, it's time to sauté some veggies to go with the quinoa.
 
 #### Onion/Veggies
 * 1 Tbsp Olive oil
