@@ -7,23 +7,26 @@ tags=["cook","recipe"]
 
 A recipe very lightly adapted from [Our Balanced Bowl](https://ourbalancedbowl.com/wprm_print/loaded-baked-potato-chowder).
 
-### Ingredients
- * 6 oz pack of bacon (half of a normal 12 oz one, really)
- * 1 large yellow onion, diced
- * 1-2 large clove garlic, minced
- * 1 tbsp all purpose flour
- * 16 oz chicken broth
- * 1.5 to 2 lbs russet potatoes, chopped into bite size pieces
- * 1/4 cup sour cream
- * 1 cup freshly shredded cheddar cheese
- * 3/4 cup heavy cream
- * 1/4 tsp salt (add more if needed!)
- * 1/4 tsp garlic powder
- * 1/4 tsp onion powder
- * 1/4 tsp smoked paprika
- * 1/4 tsp chipotle powder (or other single-chile powder)
- * 1/4 tsp cracked pepper
- * chopped green onions for garnish
+{{ ingredients(
+    ingredientList=[
+        "6 oz pack of bacon (half of a normal 12 oz one, really)",
+        "1 large yellow onion, diced",
+        "1-2 large clove garlic, minced",
+        "1 tbsp all purpose flour",
+        "16 oz chicken broth",
+        "1.5 to 2 lbs russet potatoes, chopped into bite size pieces",
+        "1/4 cup sour cream",
+        "1 cup freshly shredded cheddar cheese",
+        "3/4 cup heavy cream",
+        "1/4 tsp salt (add more if needed!)",
+        "1/4 tsp garlic powder",
+        "1/4 tsp onion powder",
+        "1/4 tsp smoked paprika",
+        "1/4 tsp chipotle powder (or other single-chile powder)",
+        "1/4 tsp cracked pepper",
+        "chopped green onions for garnish"
+    ]
+)}}
 
 ### Steps
 Begin by prepping the ingredients. 

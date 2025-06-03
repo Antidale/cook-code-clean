@@ -11,7 +11,8 @@ build_search_index = false
 
 #Taxonomy Section
 taxonomies = [
-    { name = "tags", render=true, feed=true }
+    { name = "tags", render=true, feed=true },
+    { name = "ingredients", render=false, feed=false }
 ]
 
 generate_feeds = true

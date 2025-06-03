@@ -7,19 +7,22 @@ tags=["cook","recipe"]
 
 <img src="../gochujang_alfredo.jpg" width="300" />
 
-### Ingredients
-* 5 garlic cloves
-* 2-3 green onions
-* 1 cup (50g) freshly grated Parmigiano-Reggiano cheese, plus more to serve
-* Kosher salt, to season
-* 16 oz pasta. Recommened types: pappardelle, fettuccini, linguine, penne, bow ties. You do you, though.
-* 3 tbsp (42g) butter (if you're using salted butter, adjust salt added for seasoning appropriately)
-* 1 1/4 cups heavy cream
-* 1/4 cup reserved pasta water, plus more if needed (you probably don't, and 1/4 C seems likely to be too much)
-* 1 tbsp gochujang
-* 1/2 tbsp gochugaru (if you don't have gochujaru, substitute other ground chili peppers/chili pepper flakes)
-* 1 tbsp oyster sauce
-* Black pepper, to serve
+{{ ingredients(
+    ingredientList=[
+        "5 garlic cloves",
+        "2-3 green onions",
+        "1 cup (50g) freshly grated Parmigiano-Reggiano cheese, plus more to serve",
+        "Kosher salt, to season",
+        "16 oz pasta. Recommened types: pappardelle, fettuccini, linguine, penne, bow ties. You do you, though.",
+        "3 tbsp (42g) butter (if you're using salted butter, adjust salt added for seasoning appropriately)",
+        "5/4 cups heavy cream",
+        "1/4 cup reserved pasta water, plus more if needed (you probably don't, and 1/4 C seems likely to be too much)",
+        "1 tbsp gochujang",
+        "1/2 tbsp gochugaru (if you don't have gochujaru, substitute other ground chili peppers/chili pepper flakes)",
+        "1 tbsp oyster sauce",
+        "Black pepper, to serve"
+    ]
+)}}
 
 ### Instructions
 
