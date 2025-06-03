@@ -7,17 +7,20 @@ tags=["cook","recipe","vegetarian"]
 
 <img src="../prepped_squash.jpg" width="300" />
 
-### Ingredients
- * 1 Butternut squash
- * Olive oil to lightly coat
- * large pinch salt
- * pepper to taste
-
-### Optional Ingredients
- * large pinch Gochujaru
- * pinch cinnamon
- * zest & juice of 1 lemon
- * pinch paprika (your choice of sweet, hot, or smoked)
+{{ ingredients(
+    ingredientList=[
+        "1 Butternut squash",
+        "Olive oil to lightly coat",
+        "large pinch salt",     
+        "pepper to taste",     
+    ],
+    optionalIngredients=[
+        "large pinch Gochujaru",
+        "pinch cinnamon",
+        "zest & juice of 1 lemon",
+        "pinch paprika (your choice of sweet, hot, or smoked)",
+    ]
+)}}
 
 ### Steps
 * Preheat the oven to 450°F.

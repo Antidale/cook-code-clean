@@ -1,0 +1,21 @@
+<div class="ingredients-section">
+    <h3>Ingredients</h3>
+    <div class="ingredients-list">
+        <ul>
+            {% for ingredient in ingredientList -%}
+            <li>{{ ingredient }}</li>
+            {%- endfor %}
+        </ul>
+    </div>
+    {% if optionalIngredients %}
+
+    <h3>Optional Ingredients</h3>
+    <div class="ingredients-list">
+        <ul>
+            {% for ingredient in optionalIngredients -%}
+            <li>{{ ingredient }}</li>
+            {%- endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>

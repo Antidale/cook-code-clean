@@ -7,35 +7,39 @@
 -------------------------------------- */
 /* Layout is stacked vertically by default (for narrower viewports), so give some breathing room between the sections. */
 .container>* {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 /* Now let's apply grid for wider viewports. */
 @media screen and (min-width: 40em) {
-    .container>* {
-        margin-bottom: 0;
-    }
+  .container>* {
+    margin-bottom: 0;
+  }
 
-    /* Define the grid */
-    .container {
-        display: grid;
-        grid-template-columns: 4fr 1fr;
-        grid-gap: 10px 10px;
-    }
+  /* Define the grid */
+  .container {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    grid-gap: 10px 10px;
+  }
 
-    /* Place items on the grid */
-    .header {
-        grid-column: 1 / -1;
-    }
+  /* Place items on the grid */
+  .header {
+    grid-column: 1 / -1;
+  }
 
-    .sidebar {
-        grid-row-end: span 2;
-    }
+  .sidebar {
+    grid-row-end: span 2;
+  }
 
-    .content {
-        grid-column: 1;
-        width: 80%;
-    }
+  .footer {
+    font-size: .9rem;
+  }
+
+  .content {
+    grid-column: 1;
+    width: 80%;
+  }
 }
 
 /* Alternative Approach
@@ -87,11 +91,11 @@
 /* Generic styles for demo purposes
   -------------------------------------- */
 .container {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 75rem;
 }
 
 .container>* {
-    padding: 1em;
+  padding: 1em;
 }
