@@ -1,5 +1,5 @@
 +++
-title = "Lemon Popsset"
+title = "Lemon Posset"
 date = 2025-06-03
 [taxonomies]
 tags=["cook","recipe"]
