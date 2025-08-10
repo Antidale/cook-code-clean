@@ -99,3 +99,7 @@
 .container>* {
   padding: 1em;
 }
+
+code>span {
+  padding-left: 1rem;
+}
