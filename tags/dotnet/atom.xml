@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>cook. code. - dotnet</title>
+    <subtitle>[tbd]</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://antidale.com/tags/dotnet/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://antidale.com/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-08-12T00:00:00+00:00</updated>
+    <id>https://antidale.com/tags/dotnet/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Unit Testing, CI, &amp; Microsoft Test Platform</title>
+        <published>2025-08-12T00:00:00+00:00</published>
+        <updated>2025-08-12T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/testing-ci-mtp/"/>
+        <id>https://antidale.com/blog/testing-ci-mtp/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/testing-ci-mtp/">&lt;h2 id=&quot;the-tl-dr&quot;&gt;The TL,DR:&lt;&#x2F;h2&gt;
+&lt;p&gt;If you want to have tests that are using Microsot.Testing.Platform (MTP) instead of VSTest and you want a &lt;code&gt;.trx&lt;&#x2F;code&gt; file so that you can have your CI pipeline have all what it needs to report on the tests that are running, you need to make sure to add the &lt;a href=&quot;https:&#x2F;&#x2F;www.nuget.org&#x2F;packages&#x2F;Microsoft.Testing.Extensions.TrxReport&#x2F;&quot;&gt;Microsoft.Testing.Extensions.TrxReport&lt;&#x2F;a&gt; nuget package. If you want a little more direction, you can check out the code examples below.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-story-up-to-that-point&quot;&gt;The story up to that point&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;testing&#x2F;microsoft-testing-platform-intro?tabs=dotnetcli&quot;&gt;Microsoft Testing Platform&lt;&#x2F;a&gt;
+is an alternative&#x2F;update to VSTest, which up to now had been the underlying mechanism for how tests generally ran. You can check out some differences &lt;a href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;testing&#x2F;microsoft-testing-platform-vs-vstest&quot;&gt;between them&lt;&#x2F;a&gt;, but for the most part, I was just looking to check out a new tool and try some stuff out. Also, I&#x27;d heard about &lt;a href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;intro&quot;&gt;Tunit&lt;&#x2F;a&gt;, so I used it for a quick little project I had and figured that I could use a little practice setting up some CI pipelines.&lt;&#x2F;p&gt;
+&lt;p&gt;Reading documentation, it seemed mostly straightfoward to make the switch. Take out some NuGet packages you didn&#x27;t need anymore, update your project to output as an EXE, maybe add a couple of properties to your .csproj and things should Just Work. Except they didn&#x27;t. By default, stuff using MTP doesn&#x27;t output a &lt;code&gt;.trx&lt;&#x2F;code&gt; file, instead putting a &lt;code&gt;.log&lt;&#x2F;code&gt; file in a TestResults file where all the binaries are for that compilation. CI stuff seems like it still expects to see &lt;code&gt;.trx&lt;&#x2F;code&gt; files, which: totally understandable and correct. Not only has it been around for ages, it also has lots of detail, which the &lt;code&gt;.log&lt;&#x2F;code&gt; files don&#x27;t; they&#x27;re just pretty much the same high level output as you see on the console when running tests through &lt;code&gt;dotnet test&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The main trouble I ran into was getting &lt;code&gt;MSBUILD : error MSB1001: Unknown switch.&lt;&#x2F;code&gt; when trying arguments that each TUnit and XUnit suggest should work to get a &lt;code&gt;.trx&lt;&#x2F;code&gt; to be generated. Sleeping, more trial and error, and just doing the right searching on TUnit&#x27;s documentation site got me to where I saw that I was missing a required NuGet package, and after adding it both of the projects I was tinkering with started working as I wanted in my ci pipelines. I&#x27;ve since seen a note that I must have just glossed over in Tunits docs that would have saved me some time, but it was divorced enough from the context in my head for what I wanted (&quot;I need something to make this work on CI!&quot;), that I was blind to the context where the information was offered, and where it truthfully fits a lot better than where I imagined I wanted it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;azure-pipelines&quot;&gt;Azure Pipelines&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;yml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yml &quot;&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;dotnet run --project .&#x2F;FreeEnterprise.Api.UnitTests&#x2F;FreeEnterprise.Api.UnitTests.csproj -c Release --report-trx --results-directory . --report-trx-filename results.trx
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;displayName&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Run tests&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;continueOnError&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;false
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;PublishTestResults@2
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;displayName&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Publish Test Results&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;inputs&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;testResultsFormat&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;VSTest
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;testResultsFiles&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;results.trx&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;searchFolder&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;failTaskOnFailedTests&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;failTaskOnMissingResultsFile&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I could almost certainly specify things a bit less stringently. I&#x27;d started with sample code that I &lt;em&gt;mostly&lt;&#x2F;em&gt; copied from &lt;a href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;intro&quot;&gt;Tunit&#x27;s Documentation&lt;&#x2F;a&gt; for &lt;a href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;examples&#x2F;tunit-ci-pipeline&quot;&gt;TUnit in CI pipelines&lt;&#x2F;a&gt; and very much missed the part in the script step where the &lt;code&gt;--results-directory&lt;&#x2F;code&gt; gets set, but included the specified folder in the publish step, and the step kept failing, because it was looking in the wrong place. For what I&#x27;m doing, having the test results populate in the current directory is fine. I also had trouble having the script use &lt;code&gt;dotnet test&lt;&#x2F;code&gt; over &lt;code&gt;dotnet run&lt;&#x2F;code&gt;, even with using &lt;code&gt;-- --report-trx&lt;&#x2F;code&gt; as expected (and after adding the TrxReport nuget package) and work out on the CI servers, so &lt;code&gt;dontnet run&lt;&#x2F;code&gt; it is.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;csproj-files&quot;&gt;.csproj files&lt;&#x2F;h3&gt;
+&lt;p&gt;For reference, here are examples of the .csproj files for two different of my test projects, the first using TUnit, the second using XUnit.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;tunit&quot;&gt;TUnit&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;xml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-xml &quot;&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span&gt;  &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PropertyGroup&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&amp;lt;!-- Minimim required --&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;OutputType&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;Exe&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;OutputType&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PropertyGroup&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&amp;lt;!-- This is actually my entire ItemGroup for NuGet pacakges in this project --&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ItemGroup&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PackageReference &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Include&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Microsoft.Testing.Extensions.TrxReport&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Version&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;1.8.2&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PackageReference &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Include&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;TUnit&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Version&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;0.55.6&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ItemGroup&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;xunit&quot;&gt;XUnit&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;xml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-xml &quot;&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span&gt;    &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PropertyGroup&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&amp;lt;!-- 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;            Removing some not relevant things in the group
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;        --&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;OutputType&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;Exe&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;OutputType&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;UseMicrosoftTestingPlatformRunner&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;true&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;UseMicrosoftTestingPlatformRunner&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TestingPlatformDotnetTestSupport&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;true&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TestingPlatformDotnetTestSupport&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PropertyGroup&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ItemGroup&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&amp;lt;!-- 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;            Again, minimal entries required are shown
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;        --&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PackageReference &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Include&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Microsoft.Testing.Extensions.TrxReport&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PackageReference &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Include&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;xunit.v3&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ItemGroup&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+</feed>

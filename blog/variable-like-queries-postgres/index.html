@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://antidale.com/css/style.css" rel="stylesheet">
+    <title>Antidale</title>
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="https://antidale.com/atom.xml">
+    
+</head>
+
+<body class="container">
+    <header class="header">
+        <h1>Antidale.com</h1>
+    </header>
+
+    <main class="content">
+        
+<h1 class="title">
+    Variable like queries in Postgres
+</h1>
+<p class="subtitle">
+    <strong>2025-01-01</strong>
+    
+</p>
+<p>I'll start off with an acknowledgment that the title of this post probably isn't quite right. It took a few tries at searching out the information that I actually wanted, which was a way to write a query like the following, but have it adhere to Postgres' standards/synatax</p>
+<pre data-lang="sql" style="background-color:#2b303b;color:#c0c5ce;" class="language-sql "><code class="language-sql" data-lang="sql"><span>
+</span><span>    Declare @someVariable </span><span style="color:#b48ead;">varchar</span><span>(max) = &#39;</span><span style="color:#a3be8c;">My Value</span><span>&#39;
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">select </span><span style="color:#bf616a;">* 
+</span><span>    </span><span style="color:#b48ead;">from</span><span> SomeTable
+</span><span>    </span><span style="color:#b48ead;">where</span><span> SomeColumn = @someVariable
+</span><span>
+</span></code></pre>
+<p>Postgres doesn't handle variables that way, and if you want to use them, you're using PLPGSQL and doing your work within a DO/END block, which carries some restrictions on what you can do with it. <a href="https://www.postgresql.org/docs/current/plpgsql.html">Documentation.</a> (or you're doing something in psql)</p>
+<p>So instead, general suggestions are to use either a CTE or a temp table to store what would be your variables and use them in your query. This <a href="https://stackoverflow.com/questions/1490942/declare-a-variable-in-a-postgresql-query">stack overflow</a> post has examples of all the above methods (PLPGSQL, CTEs, temp tables, and a couple of other options besides).</p>
+<p>I liked the CTE approach for the specific use-case I had, and it made it work more nicely in my brain when I went from a single value to updating a number of rows in the database. In the end, I had something like this to going:</p>
+<pre data-lang="sql" style="background-color:#2b303b;color:#c0c5ce;" class="language-sql "><code class="language-sql" data-lang="sql"><span>
+</span><span>    </span><span style="color:#b48ead;">WITH</span><span> data (userId, displayName, tournamentName) AS (
+</span><span>    </span><span style="color:#b48ead;">values 
+</span><span>        (&#39;</span><span style="color:#a3be8c;">472321239864705034</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">somename</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">test updates</span><span>&#39;),
+</span><span>        (&#39;</span><span style="color:#a3be8c;">someId_1</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">somename_1</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">test updates</span><span>&#39;),
+</span><span>        (&#39;</span><span style="color:#a3be8c;">someId_2</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">somename_2</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">test updates</span><span>&#39;)
+</span><span>    )
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">update </span><span style="color:#d08770;">tournament</span><span>.</span><span style="color:#d08770;">registrations</span><span> r
+</span><span>    </span><span style="color:#b48ead;">set</span><span> user_name_alias = </span><span style="color:#d08770;">d</span><span>.</span><span style="color:#d08770;">displayName
+</span><span>    </span><span style="color:#b48ead;">from </span><span style="color:#d08770;">tournament</span><span>.</span><span style="color:#d08770;">tournament_registrations</span><span> tr
+</span><span>    </span><span style="color:#b48ead;">join</span><span> data d on d. userId = </span><span style="color:#d08770;">tr</span><span>.</span><span style="color:#d08770;">user_id 
+</span><span>    </span><span style="color:#b48ead;">where </span><span style="color:#d08770;">tr</span><span>.</span><span style="color:#d08770;">tournament_id </span><span>= </span><span style="color:#d08770;">r</span><span>.</span><span style="color:#d08770;">tournament_id 
+</span><span>    and </span><span style="color:#d08770;">tr</span><span>.</span><span style="color:#d08770;">user_id </span><span>= </span><span style="color:#d08770;">d</span><span>.</span><span style="color:#d08770;">userId
+</span><span>    and </span><span style="color:#d08770;">tr</span><span>.</span><span style="color:#d08770;">entrant_id </span><span>= </span><span style="color:#d08770;">r</span><span>.</span><span style="color:#d08770;">entrant_id
+</span><span>    and (</span><span style="color:#d08770;">d</span><span>.</span><span style="color:#d08770;">tournamentName </span><span>= &#39;&#39; 
+</span><span>        or </span><span style="color:#d08770;">tr</span><span>.</span><span style="color:#d08770;">tournament_name </span><span>= </span><span style="color:#d08770;">d</span><span>.</span><span style="color:#d08770;">tournamentName</span><span>)
+</span><span>
+</span></code></pre>
+<p>The downside of using a common table expression is that you can't re-use it later on if you're doing multiple queries. IN case you do need to re-use your setup, you'd change to inserting the data into a temp table, and just move on from there. Temp tables have their own issues, so, you know, pick what's right for you.</p>
+<p>All of this was needed because I give myself lots of room in my schema design to shoot myslef in the foot just this way. I probably should have just designed the system so that the display name is just per user, but instead I have it per tournament the user is registered for.</p>
+<p>Also could have avoided figuring this out in production with better testing, either automated or manual. That's for a different day, though.</p>
+
+
+    </main>
+    <section class="sidebar">
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="https://antidale.com/blog/">Posts</a>
+            </li>
+            <li>
+                <a href="/tags">Tags</a>
+            </li>
+            <li>
+                <a href="https://bsky.app/profile/antidale.com">bsky</a>
+            </li>
+            <li>
+                <a href="https://github.com/Antidale">github</a>
+            </li>
+        </ul>
+    </section>
+</body>
+<footer class="footer">
+    Site built with <a href="https://www.getzola.org/documentation/content/overview/">Zola</a>. &copy;2025 by me.
+</footer>
+
+</html>

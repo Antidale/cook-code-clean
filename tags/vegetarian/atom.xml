@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>cook. code. - vegetarian</title>
+    <subtitle>[tbd]</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://antidale.com/tags/vegetarian/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://antidale.com/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-02-04T00:00:00+00:00</updated>
+    <id>https://antidale.com/tags/vegetarian/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Roasted Butternut Squash</title>
+        <published>2025-02-04T00:00:00+00:00</published>
+        <updated>2025-02-04T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/roasted-butternut-squash/"/>
+        <id>https://antidale.com/blog/roasted-butternut-squash/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/roasted-butternut-squash/">&lt;img src=&quot;..&#x2F;prepped_squash.jpg&quot; width=&quot;300&quot; &#x2F;&gt;
+&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;1 Butternut squash&lt;&#x2F;li&gt;&lt;li&gt;Olive oil to lightly coat&lt;&#x2F;li&gt;&lt;li&gt;large pinch salt&lt;&#x2F;li&gt;&lt;li&gt;pepper to taste&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+
+    &lt;h3&gt;Optional Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;large pinch Gochujaru&lt;&#x2F;li&gt;&lt;li&gt;pinch cinnamon&lt;&#x2F;li&gt;&lt;li&gt;zest &amp;amp; juice of 1 lemon&lt;&#x2F;li&gt;&lt;li&gt;pinch paprika (your choice of sweet, hot, or smoked)&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;&lt;h3 id=&quot;steps&quot;&gt;Steps&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Preheat the oven to 450°F.&lt;&#x2F;li&gt;
+&lt;li&gt;Peel the squash, cut off top&#x2F;handle and bottom&#x2F;root.&lt;&#x2F;li&gt;
+&lt;li&gt;Slice the remaining top section into about 1&#x2F;2&quot; rounds&lt;&#x2F;li&gt;
+&lt;li&gt;Once you hit the bottom section where the pulp&#x2F;seeds are, remove them, and then dice this section into about 1&#x2F;2&quot; cubes&lt;&#x2F;li&gt;
+&lt;li&gt;line a sheet pan with parchment (mostly for helping cleanup)&lt;&#x2F;li&gt;
+&lt;li&gt;place squash on sheet pan, arranging the cubes in the middle and surrounding them with the rounds&lt;&#x2F;li&gt;
+&lt;li&gt;drizzle oil over the squash&lt;&#x2F;li&gt;
+&lt;li&gt;add the large pinch of salt&lt;&#x2F;li&gt;
+&lt;li&gt;grind pepper over the squash&lt;&#x2F;li&gt;
+&lt;li&gt;for any of the optional ingredients, choose one or two and add them on top. (Lemon juice&#x2F;zest go on at the end, not here)&lt;&#x2F;li&gt;
+&lt;li&gt;thouroughly mix&#x2F;coat the squash with the oil, salt, pepper, and additional ingredients on both sides&lt;&#x2F;li&gt;
+&lt;li&gt;bake for about 15 minutes&lt;&#x2F;li&gt;
+&lt;li&gt;flip rounds and flip&#x2F;mix cubes as best you can&lt;&#x2F;li&gt;
+&lt;li&gt;bake for another 15 minutes&lt;&#x2F;li&gt;
+&lt;li&gt;remove from oven, and if you&#x27;re adding lemon juice&#x2F;zest, now&#x27;s the time to add it to the squash.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;img src=&quot;..&#x2F;roasted_squash.jpg&quot; width=&quot;300&quot; &#x2F;&gt;
+&lt;p&gt;The rounds are nicely versatile, either making a patty that fits well into an english muffin, a nice side, or can be cut into cubes for a salad. The cubes themselves I normally refrigerate and add to salads over the next couple of days. Adding them to rice or quinoa is also nice.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
