@@ -1,6 +1,8 @@
 +++
 title = "Updating to .NET 10 and MTP"
 date = 2025-11-12
+[taxonomies]
+tags=["code","testing","ci","dotnet",".net10"]
 +++
 
 A bit of a follow up to [this testing ci and mtp](@/blog/testing-ci-mtp.md) post. [.NET 10](https://devblogs.microsoft.com/dotnet/announcing-dotnet-10/) is released, and with that some rejoicing (I really like idea of the new extension stuff, the field change is also cool, and null-conditional assignment is nice to have) is in order, and also there are some changes to having your tests run as you're upgrading.
