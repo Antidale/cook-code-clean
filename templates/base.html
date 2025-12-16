@@ -7,7 +7,7 @@
     <title>Antidale</title>
     {% block rss %}
     <link rel="alternate" type="application/atom+xml" title="RSS" href="{{ get_url(path='atom.xml',
-        trailing_slash=false) }}">
+            trailing_slash=false) }}">
     {% endblock %}
 </head>
 
@@ -15,7 +15,6 @@
     <header class="header">
         <h1>Antidale.com</h1>
     </header>
-
     <main class="content">
         {% block content %} {% endblock %}
     </main>
