@@ -1,15 +1,15 @@
 html {
-  --background: #ffffff;
+  --background: #2b1c12;
   --background-alt: #fff6e6;
-  --primary: #294C60;
-  --primary-contrast: #ffffff;
+  --primary-contrast: #90b695;
+  --primary: #658db8;
   --accent: #fca05d;
-  --color: #001b2e;
-  --danger: #c52b2b;
-  --shadow: #b8cfdd;
-  --border: #afbac0;
+  --color: #f1f7ed;
+  /* --danger: #c52b2b; */
+  --shadow: #546a76;
+  --border: #546a76;
 
-  @media (prefers-color-scheme: dark) {
+  /* @media (prefers-color-scheme: dark) {
     --background: #001b2e;
     --background-alt: #07314e;
     --primary: #84cbf3;
@@ -20,14 +20,25 @@ html {
     --shadow: #3e5d70;
     --border: #8b9398;
 
-  }
+  } */
 
   color: var(--color);
   background: var(--background);
   font: var(--font);
 }
 
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
 
+a:visited {
+  color: var(--primary-contrast)
+}
+
+a:hover {
+  text-decoration: underline;
+}
 
 /* 
     css from https://www.cssmakeovers.com/patterns/three-columns-long-sidebars/ 
@@ -73,54 +84,6 @@ html {
   }
 }
 
-/* Alternative Approach
-  -------------------------------------- */
-/* There is more than one way to achieve the same result with Grid. The commented-out code below, which would replace all of the code above, shows how to use Grid's template areas feature. It's pretty ingenious: in the grid-template-areas property, you show where the various grid areas should appear on the grid.
-  
-  For example, I've said below that:
-    * the head grid-area should span all three columns of row one;
-    * the side1 grid-area should occupy column one of row two;
-    * the main grid-area should occupy column two of row two;
-    * the side2 grid-area should occupy column three of row two;
-    * and the foot grid-area should span all three columns of row three.
-  
-  Below that part I've assigned a grid-area to the classes used on the layout's sections. The grid-areas assigned here are the ones used in grid-template-areas. For example, I set .header { grid-area: head; }. If I did .header { grid-area: page-header; } instead, I would need to change "head head head" in grid-template-areas to "page-header page-header page-header". (Please note that only one space between grid areas is required to indicate columns. You do not have to line up the columns in grid-template-areas as I have below.)
-  
-  All told, when combining grid-template-areas with matching grid-area assignments, you can see what the layout will be just by glancing at the grid-template-areas value!
-  */
-/*
-  .container {
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    grid-gap: 10px 20px;
-    grid-template-areas:
-      "head  head head"
-      "side1 main side2"
-      "foot  foot foot";
-  }
-  
-  .header {
-    grid-area: head;
-  }
-  
-  .sidebar-1 {
-    grid-area: side1;
-  }
-  
-  .content {
-    grid-area: main;
-  }
-  
-  .sidebar-2 {
-    grid-area: side2;
-  }
-  
-  .footer {
-    grid-area: foot;
-  }
-  */
-/* Generic styles for demo purposes
-  -------------------------------------- */
 .container {
   margin-left: auto;
   margin-right: auto;
@@ -138,4 +101,18 @@ pre {
   max-width: 90%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.sidebar {
+  ul {
+    border: solid .15rem var(--border);
+    border-radius: 6px;
+    margin: 1em;
+    list-style-type: none;
+  }
+
+  li {
+    padding-top: .25rem;
+  }
+
 }
