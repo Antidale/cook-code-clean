@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>cook. code. - dessert</title>
+    <subtitle>[tbd]</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://antidale.com/tags/dessert/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://antidale.com/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-06-03T00:00:00+00:00</updated>
+    <id>https://antidale.com/tags/dessert/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Lemon Posset</title>
+        <published>2025-06-03T00:00:00+00:00</published>
+        <updated>2025-06-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/lemon-posset/"/>
+        <id>https://antidale.com/blog/lemon-posset/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/lemon-posset/">&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;1 pint (16 oz) heavy cream&lt;&#x2F;li&gt;&lt;li&gt;3-4 smallish lemons, zested and juiced&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;2 cup sugar&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;8 tsp vanilla powder (optional)&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;&lt;h3 id=&quot;instructions&quot;&gt;Instructions&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;prep&quot;&gt;Prep&lt;&#x2F;h4&gt;
+&lt;p&gt;Zest and juice the lemons.&lt;&#x2F;p&gt;
+&lt;p&gt;The recipe is forgiving in nature, but you&#x27;re looking for between over 1 and 1.5 tbsp of lemon zest, and between 1&#x2F;4 and 1&#x2F;2 cups of lemon juice.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;cooking&quot;&gt;Cooking&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Combine cream, sugar, and lemon zest in a medium saucepan and bring to a boil over medium heat, cook for 8 to 12 minutes, or until the mixture is reduced to about 2 cups. Stir frequently to fully incorporate the sugar and reduce the chance of things boiling over. Even when you&#x27;re not stirring, keep an eye on it and be ready to temporarily remove it from the heat to prevent it from boiling over.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Remove the saucepan from the heat and stir in the lemon juice. Let cool for about 20 minutes (a skin should form on top). Strain through a fine mesh strainer to separate out the zest. If using the vanilla, now&#x27;s a great time to add it. Pour strained mixture into whatever serving option you&#x27;ve chosen. Individual ramekins or glasses are common, but I&#x27;m often putting it into a 2 cup container of some sort&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Refrigerate, uncovered, until the posset sets, at least 3 hours. Once chilled, wrap in plastic wrap and they&#x27;ll keep for a couple&#x2F;few days. Adding some berries at the end is nice.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+</feed>

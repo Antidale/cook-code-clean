@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://antidale.com/css/style.css" rel="stylesheet">
+    <title>Antidale</title>
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="https://antidale.com/atom.xml">
+    
+</head>
+
+<body class="container">
+    <header class="header">
+        <h1>Antidale.com</h1>
+    </header>
+
+    <main class="content">
+        
+<h1 class="title">
+    make code
+</h1>
+<p class="subtitle">
+    <strong>2025-08-10</strong>
+    
+    
+    <a href="/tags/code">code</a>
+    
+    <a href="/tags/tools">tools</a>
+    
+    
+</p>
+<p>One of the things I find to be small hassle in using the dotnet cli for running projects via <code>dotnet run</code> is having to specify the target project as soon as I add some testing projects to the solution. I know I could always <code>cd</code> to the folder of the relevant <code>.csproj</code> file, but that's roughly equal hassle, and I generally prefer to just stay at the root of a project most of the time. I took a little time recently to see if maybe things had changed and you could specify a default project in a <code>.sln</code> or <code>.slnx</code> file, but alas.</p>
+<p>However, this <a rel="external" href="https://stackoverflow.com/a/59942079">stack overflow answer suggesting using a Makefile</a> is a really good solution for me. As a solution, I think it is very customizable, less of a bother than making shell scripts for it, and clear what's going on when you look at it. My favorite little thing is that running <code>make watch-test</code> doesn't actually change the directory of the terminal, so when I stop running tests under the watch, I'm still at the directory root. Delightful!</p>
+<p>Here's what I currently have going on in for the one place I'm currently using it (folder names redacted)</p>
+<pre><code data-lang="make">watch:
+	dotnet watch run --project ./SomeFolder/SomeFolder.csproj
+run:
+	dotnet run --project ./SomeFolder/SomeFolder.csproj
+watch-test:
+	cd ./SomeFolder.UnitTests &amp;&amp; dotnet watch test
+outdated:
+	dotnet outdated -exc FluentAssertions
+outdated-upgrade:
+	dotnet outdated -exc FluentAssertions -u
+</code></pre>
+
+
+    </main>
+    <section class="sidebar">
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="https://antidale.com/blog/">Posts</a>
+            </li>
+            <li>
+                <a href="/tags">Tags</a>
+            </li>
+            <li>
+                <a href="https://bsky.app/profile/antidale.com">bsky</a>
+            </li>
+            <li>
+                <a href="https://github.com/Antidale">github</a>
+            </li>
+        </ul>
+    </section>
+</body>
+<footer class="footer">
+    Site built with <a href="https://www.getzola.org/documentation/content/overview/">Zola</a>. &copy;2025 by me.
+</footer>
+
+</html>

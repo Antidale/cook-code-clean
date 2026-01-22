@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://antidale.com/css/style.css" rel="stylesheet">
+    <title>Antidale</title>
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="https://antidale.com/atom.xml">
+    
+</head>
+
+<body class="container">
+    <header class="header">
+        <h1>Antidale.com</h1>
+    </header>
+
+    <main class="content">
+        
+<h1 class="title">
+    Unit Testing, CI, &amp; Microsoft Test Platform
+</h1>
+<p class="subtitle">
+    <strong>2025-08-12</strong>
+    
+    
+    <a href="/tags/code">code</a>
+    
+    <a href="/tags/testing">testing</a>
+    
+    <a href="/tags/ci">ci</a>
+    
+    <a href="/tags/dotnet">dotnet</a>
+    
+    
+</p>
+<h2 id="the-tl-dr">The TL,DR:</h2>
+<p>If you want to have tests that are using Microsot.Testing.Platform (MTP) instead of VSTest and you want a <code>.trx</code> file so that you can have your CI pipeline have all what it needs to report on the tests that are running, you need to make sure to add the <a rel="external" href="https://www.nuget.org/packages/Microsoft.Testing.Extensions.TrxReport/">Microsoft.Testing.Extensions.TrxReport</a> nuget package. If you want a little more direction, you can check out the code examples below.</p>
+<h2 id="the-story-up-to-that-point">The story up to that point</h2>
+<p><a rel="external" href="https://learn.microsoft.com/en-us/dotnet/core/testing/microsoft-testing-platform-intro?tabs=dotnetcli">Microsoft Testing Platform</a>
+is an alternative/update to VSTest, which up to now had been the underlying mechanism for how tests generally ran. You can check out some differences <a rel="external" href="https://learn.microsoft.com/en-us/dotnet/core/testing/microsoft-testing-platform-vs-vstest">between them</a>, but for the most part, I was just looking to check out a new tool and try some stuff out. Also, I'd heard about <a rel="external" href="https://tunit.dev/docs/intro">Tunit</a>, so I used it for a quick little project I had and figured that I could use a little practice setting up some CI pipelines.</p>
+<p>Reading documentation, it seemed mostly straightfoward to make the switch. Take out some NuGet packages you didn't need anymore, update your project to output as an EXE, maybe add a couple of properties to your .csproj and things should Just Work. Except they didn't. By default, stuff using MTP doesn't output a <code>.trx</code> file, instead putting a <code>.log</code> file in a TestResults file where all the binaries are for that compilation. CI stuff seems like it still expects to see <code>.trx</code> files, which: totally understandable and correct. Not only has it been around for ages, it also has lots of detail, which the <code>.log</code> files don't; they're just pretty much the same high level output as you see on the console when running tests through <code>dotnet test</code>.</p>
+<p>The main trouble I ran into was getting <code>MSBUILD : error MSB1001: Unknown switch.</code> when trying arguments that each TUnit and XUnit suggest should work to get a <code>.trx</code> to be generated. Sleeping, more trial and error, and just doing the right searching on TUnit's documentation site got me to where I saw that I was missing a required NuGet package, and after adding it both of the projects I was tinkering with started working as I wanted in my ci pipelines. I've since seen a note that I must have just glossed over in Tunits docs that would have saved me some time, but it was divorced enough from the context in my head for what I wanted ("I need something to make this work on CI!"), that I was blind to the context where the information was offered, and where it truthfully fits a lot better than where I imagined I wanted it.</p>
+<h2 id="example">Example</h2>
+<h3 id="azure-pipelines">Azure Pipelines</h3>
+<pre><code data-lang="yml">- script: dotnet run --project ./FreeEnterprise.Api.UnitTests/FreeEnterprise.Api.UnitTests.csproj -c Release --report-trx --results-directory . --report-trx-filename results.trx
+  displayName: &#39;Run tests&#39;
+  continueOnError: false
+
+- task: PublishTestResults@2
+  displayName: &#39;Publish Test Results&#39;
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: &#39;results.trx&#39;
+    searchFolder: &#39;.&#39;
+    failTaskOnFailedTests: true
+    failTaskOnMissingResultsFile: true
+</code></pre>
+<p>I could almost certainly specify things a bit less stringently. I'd started with sample code that I <em>mostly</em> copied from <a rel="external" href="https://tunit.dev/docs/intro">Tunit's Documentation</a> for <a rel="external" href="https://tunit.dev/docs/examples/tunit-ci-pipeline">TUnit in CI pipelines</a> and very much missed the part in the script step where the <code>--results-directory</code> gets set, but included the specified folder in the publish step, and the step kept failing, because it was looking in the wrong place. For what I'm doing, having the test results populate in the current directory is fine. I also had trouble having the script use <code>dotnet test</code> over <code>dotnet run</code>, even with using <code>-- --report-trx</code> as expected (and after adding the TrxReport nuget package) and work out on the CI servers, so <code>dontnet run</code> it is.</p>
+<h3 id="csproj-files">.csproj files</h3>
+<p>For reference, here are examples of the .csproj files for two different of my test projects, the first using TUnit, the second using XUnit.</p>
+<h4 id="tunit">TUnit</h4>
+<pre><code data-lang="xml">  &lt;PropertyGroup&gt;
+    &lt;!-- Minimim required --&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;!-- This is actually my entire ItemGroup for NuGet pacakges in this project --&gt;
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include=&quot;Microsoft.Testing.Extensions.TrxReport&quot; Version=&quot;1.8.2&quot; /&gt;
+    &lt;PackageReference Include=&quot;TUnit&quot; Version=&quot;0.55.6&quot; /&gt;
+  &lt;/ItemGroup&gt;
+</code></pre>
+<h3 id="xunit">XUnit</h3>
+<pre><code data-lang="xml">    &lt;PropertyGroup&gt;
+        &lt;!-- 
+            Removing some not relevant things in the group
+        --&gt;
+        &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+        &lt;UseMicrosoftTestingPlatformRunner&gt;true&lt;/UseMicrosoftTestingPlatformRunner&gt;
+        &lt;TestingPlatformDotnetTestSupport&gt;true&lt;/TestingPlatformDotnetTestSupport&gt;
+    &lt;/PropertyGroup&gt;
+    &lt;ItemGroup&gt;
+        &lt;!-- 
+            Again, minimal entries required are shown
+        --&gt;
+        &lt;PackageReference Include=&quot;Microsoft.Testing.Extensions.TrxReport&quot; /&gt;
+        &lt;PackageReference Include=&quot;xunit.v3&quot; /&gt;
+    &lt;/ItemGroup&gt;
+</code></pre>
+
+
+    </main>
+    <section class="sidebar">
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="https://antidale.com/blog/">Posts</a>
+            </li>
+            <li>
+                <a href="/tags">Tags</a>
+            </li>
+            <li>
+                <a href="https://bsky.app/profile/antidale.com">bsky</a>
+            </li>
+            <li>
+                <a href="https://github.com/Antidale">github</a>
+            </li>
+        </ul>
+    </section>
+</body>
+<footer class="footer">
+    Site built with <a href="https://www.getzola.org/documentation/content/overview/">Zola</a>. &copy;2025 by me.
+</footer>
+
+</html>

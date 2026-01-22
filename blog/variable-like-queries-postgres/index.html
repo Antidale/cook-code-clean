@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://antidale.com/css/style.css" rel="stylesheet">
+    <title>Antidale</title>
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="https://antidale.com/atom.xml">
+    
+</head>
+
+<body class="container">
+    <header class="header">
+        <h1>Antidale.com</h1>
+    </header>
+
+    <main class="content">
+        
+<h1 class="title">
+    Variable like queries in Postgres
+</h1>
+<p class="subtitle">
+    <strong>2025-01-01</strong>
+    
+</p>
+<p>I'll start off with an acknowledgment that the title of this post probably isn't quite right. It took a few tries at searching out the information that I actually wanted, which was a way to write a query like the following, but have it adhere to Postgres' standards/synatax</p>
+<pre><code data-lang="sql">
+    Declare @someVariable varchar(max) = &#39;My Value&#39;
+
+    select * 
+    from SomeTable
+    where SomeColumn = @someVariable
+
+</code></pre>
+<p>Postgres doesn't handle variables that way, and if you want to use them, you're using PLPGSQL and doing your work within a DO/END block, which carries some restrictions on what you can do with it. <a rel="external" href="https://www.postgresql.org/docs/current/plpgsql.html">Documentation.</a> (or you're doing something in psql)</p>
+<p>So instead, general suggestions are to use either a CTE or a temp table to store what would be your variables and use them in your query. This <a rel="external" href="https://stackoverflow.com/questions/1490942/declare-a-variable-in-a-postgresql-query">stack overflow</a> post has examples of all the above methods (PLPGSQL, CTEs, temp tables, and a couple of other options besides).</p>
+<p>I liked the CTE approach for the specific use-case I had, and it made it work more nicely in my brain when I went from a single value to updating a number of rows in the database. In the end, I had something like this to going:</p>
+<pre><code data-lang="sql">
+    WITH data (userId, displayName, tournamentName) AS (
+    values 
+        (&#39;472321239864705034&#39;, &#39;somename&#39;, &#39;test updates&#39;),
+        (&#39;someId_1&#39;, &#39;somename_1&#39;, &#39;test updates&#39;),
+        (&#39;someId_2&#39;, &#39;somename_2&#39;, &#39;test updates&#39;)
+    )
+
+    update tournament.registrations r
+    set user_name_alias = d.displayName
+    from tournament.tournament_registrations tr
+    join data d on d. userId = tr.user_id 
+    where tr.tournament_id = r.tournament_id 
+    and tr.user_id = d.userId
+    and tr.entrant_id = r.entrant_id
+    and (d.tournamentName = &#39;&#39; 
+        or tr.tournament_name = d.tournamentName)
+
+</code></pre>
+<p>The downside of using a common table expression is that you can't re-use it later on if you're doing multiple queries. IN case you do need to re-use your setup, you'd change to inserting the data into a temp table, and just move on from there. Temp tables have their own issues, so, you know, pick what's right for you.</p>
+<p>All of this was needed because I give myself lots of room in my schema design to shoot myslef in the foot just this way. I probably should have just designed the system so that the display name is just per user, but instead I have it per tournament the user is registered for.</p>
+<p>Also could have avoided figuring this out in production with better testing, either automated or manual. That's for a different day, though.</p>
+
+
+    </main>
+    <section class="sidebar">
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="https://antidale.com/blog/">Posts</a>
+            </li>
+            <li>
+                <a href="/tags">Tags</a>
+            </li>
+            <li>
+                <a href="https://bsky.app/profile/antidale.com">bsky</a>
+            </li>
+            <li>
+                <a href="https://github.com/Antidale">github</a>
+            </li>
+        </ul>
+    </section>
+</body>
+<footer class="footer">
+    Site built with <a href="https://www.getzola.org/documentation/content/overview/">Zola</a>. &copy;2025 by me.
+</footer>
+
+</html>

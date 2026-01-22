@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://antidale.com/css/style.css" rel="stylesheet">
+    <title>Antidale</title>
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="https://antidale.com/atom.xml">
+    
+</head>
+
+<body class="container">
+    <header class="header">
+        <h1>Antidale.com</h1>
+    </header>
+
+    <main class="content">
+        
+<h1 class="title">
+    Updating to .NET 10 and MTP
+</h1>
+<p class="subtitle">
+    <strong>2025-11-12</strong>
+    
+    
+    <a href="/tags/code">code</a>
+    
+    <a href="/tags/testing">testing</a>
+    
+    <a href="/tags/ci">ci</a>
+    
+    <a href="/tags/dotnet">dotnet</a>
+    
+    <a href="/tags/.net10">.net10</a>
+    
+    
+</p>
+<p>A bit of a follow up to <a href="https://antidale.com/blog/testing-ci-mtp/">this testing ci and mtp</a> post. <a rel="external" href="https://devblogs.microsoft.com/dotnet/announcing-dotnet-10/">.NET 10</a> is released, and with that some rejoicing (I really like idea of the new extension stuff, the field change is also cool, and null-conditional assignment is nice to have) is in order, and also there are some changes to having your tests run as you're upgrading.</p>
+<p>This post is specific to what I had to do when updating to .net 10 from .net 9 while using xunit. The basic Xunit.v3 package does not work with MTP v2, so the upgrade path is slightly more complicated than just updating to the latest versions of the standard packages.</p>
+<p>First up, if you don't have a <a rel="external" href="https://learn.microsoft.com/en-us/dotnet/core/tools/global-json">global.json</a> file, which goes at the same level as a <code>.sln</code> or <code>.slnx</code> file, you'll want to add that. The <code>dotnet new globaljson</code> command (<a rel="external" href="https://learn.microsoft.com/en-us/dotnet/core/tools/global-json">docs here</a>) gets you started, and then add in this section:</p>
+<pre><code data-lang="json">    &quot;test&quot;: {
+        &quot;runner&quot;: &quot;Microsoft.Testing.Platform&quot;
+    }
+</code></pre>
+<p>Next, since xunit v3 seems to not support MTP v2 currently (as of 3.2.0) in the main package, you'll need to change to a version that does, so remove the <code>xunit.v3</code> or <code>xunit.v3.core</code> you're currently using and add in <code>xunit.v3.mtp-v2</code> or <code>xunit.v3.core.mtp-2</code>. This <a rel="external" href="https://github.com/xunit/xunit/issues/3416#issuecomment-3447785145">github comment</a> has more detail about the change, and further down in the discussion is why the change isn't incoporated into the base <code>xunit.v3</code> package.</p>
+<p>For some specific package version numbers that are working for me today:</p>
+<ul>
+<li>Microsoft.NET.Test.Sdk 18.0.1</li>
+<li>xunit.v3.mtp-v2 3.2.0</li>
+<li>Microsoft.Testing.Extensions.TrxReport 2.0.2 (for creating a .trx as part of a ci build)</li>
+</ul>
+<p>And with adding in the global.json file with the test section, changing slightly the xunit package you're referencing, and just generally getting all your packages up-to-date with .net 10, your tests should run and pass just as they did before the update.</p>
+<h3 id="troubleshooting">Troubleshooting</h3>
+<p>These are here mostly to try and catch anyone searching for specific errors, since everything's covered above. But also, <a rel="external" href="https://www.youtube.com/watch?v=LlmTWlaWs_o&amp;t=150s">repetition legitimzes</a>.</p>
+<h4 id="typeloadexception">TypeLoadException</h4>
+<p><code>System.TypeLoadException: Could not load type 'Microsoft.Testing.Platform.Extensions.TestHost.IDataConsumer' from assembly 'Microsoft.Testing.Platform, Version=2.0.0.0</code></p>
+<p>This error notes that you're using MTP v2, and your version of xunit doesn't support that. To keep using MTP v2, make sure sure to replace your package reference from <code>xunit.v3</code> to <code>xunit.v3.mtp-v2</code> (<a rel="external" href="https://github.com/xunit/xunit/issues/3416#issuecomment-3447785145">further information</a>). If you're using centralized package managemnet, make sure you're changing both the Directory.Packages.props file, and the test projects .csproj file.</p>
+<h4 id="vstest-vs-mtp-mismatch">VSTest vs MTP mismatch</h4>
+<p><code>.nuget/packages/microsoft.testing.platform.msbuild/2.0.1/buildMultiTargeting/Microsoft.Testing.Platform.MSBuild.targets(263,5): error Testing with VSTest target is no longer supported by Microsoft.Testing.Platform on .NET 10 SDK and later. If you use dotnet test, you should opt-in to the new dotnet test experience. For more information, see https://aka.ms/dotnet-test-mtp-error</code></p>
+<p>If you run your tests and get the above error, you've forgotten to add in your <code>global.json</code> file, or omitted the tests section in that file.</p>
+
+
+    </main>
+    <section class="sidebar">
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="https://antidale.com/blog/">Posts</a>
+            </li>
+            <li>
+                <a href="/tags">Tags</a>
+            </li>
+            <li>
+                <a href="https://bsky.app/profile/antidale.com">bsky</a>
+            </li>
+            <li>
+                <a href="https://github.com/Antidale">github</a>
+            </li>
+        </ul>
+    </section>
+</body>
+<footer class="footer">
+    Site built with <a href="https://www.getzola.org/documentation/content/overview/">Zola</a>. &copy;2025 by me.
+</footer>
+
+</html>

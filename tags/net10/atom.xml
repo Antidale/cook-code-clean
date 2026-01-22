@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>cook. code. - .net10</title>
+    <subtitle>[tbd]</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://antidale.com/tags/net10/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://antidale.com/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-11-12T00:00:00+00:00</updated>
+    <id>https://antidale.com/tags/net10/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Updating to .NET 10 and MTP</title>
+        <published>2025-11-12T00:00:00+00:00</published>
+        <updated>2025-11-12T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/testing-net-10/"/>
+        <id>https://antidale.com/blog/testing-net-10/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/testing-net-10/">&lt;p&gt;A bit of a follow up to &lt;a href=&quot;https:&#x2F;&#x2F;antidale.com&#x2F;blog&#x2F;testing-ci-mtp&#x2F;&quot;&gt;this testing ci and mtp&lt;&#x2F;a&gt; post. &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;devblogs.microsoft.com&#x2F;dotnet&#x2F;announcing-dotnet-10&#x2F;&quot;&gt;.NET 10&lt;&#x2F;a&gt; is released, and with that some rejoicing (I really like idea of the new extension stuff, the field change is also cool, and null-conditional assignment is nice to have) is in order, and also there are some changes to having your tests run as you&#x27;re upgrading.&lt;&#x2F;p&gt;
+&lt;p&gt;This post is specific to what I had to do when updating to .net 10 from .net 9 while using xunit. The basic Xunit.v3 package does not work with MTP v2, so the upgrade path is slightly more complicated than just updating to the latest versions of the standard packages.&lt;&#x2F;p&gt;
+&lt;p&gt;First up, if you don&#x27;t have a &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;tools&#x2F;global-json&quot;&gt;global.json&lt;&#x2F;a&gt; file, which goes at the same level as a &lt;code&gt;.sln&lt;&#x2F;code&gt; or &lt;code&gt;.slnx&lt;&#x2F;code&gt; file, you&#x27;ll want to add that. The &lt;code&gt;dotnet new globaljson&lt;&#x2F;code&gt; command (&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;tools&#x2F;global-json&quot;&gt;docs here&lt;&#x2F;a&gt;) gets you started, and then add in this section:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;json&quot;&gt;    &amp;quot;test&amp;quot;: {
+        &amp;quot;runner&amp;quot;: &amp;quot;Microsoft.Testing.Platform&amp;quot;
+    }
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Next, since xunit v3 seems to not support MTP v2 currently (as of 3.2.0) in the main package, you&#x27;ll need to change to a version that does, so remove the &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; or &lt;code&gt;xunit.v3.core&lt;&#x2F;code&gt; you&#x27;re currently using and add in &lt;code&gt;xunit.v3.mtp-v2&lt;&#x2F;code&gt; or &lt;code&gt;xunit.v3.core.mtp-2&lt;&#x2F;code&gt;. This &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xunit&#x2F;xunit&#x2F;issues&#x2F;3416#issuecomment-3447785145&quot;&gt;github comment&lt;&#x2F;a&gt; has more detail about the change, and further down in the discussion is why the change isn&#x27;t incoporated into the base &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; package.&lt;&#x2F;p&gt;
+&lt;p&gt;For some specific package version numbers that are working for me today:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Microsoft.NET.Test.Sdk 18.0.1&lt;&#x2F;li&gt;
+&lt;li&gt;xunit.v3.mtp-v2 3.2.0&lt;&#x2F;li&gt;
+&lt;li&gt;Microsoft.Testing.Extensions.TrxReport 2.0.2 (for creating a .trx as part of a ci build)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;And with adding in the global.json file with the test section, changing slightly the xunit package you&#x27;re referencing, and just generally getting all your packages up-to-date with .net 10, your tests should run and pass just as they did before the update.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;troubleshooting&quot;&gt;Troubleshooting&lt;&#x2F;h3&gt;
+&lt;p&gt;These are here mostly to try and catch anyone searching for specific errors, since everything&#x27;s covered above. But also, &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=LlmTWlaWs_o&amp;amp;t=150s&quot;&gt;repetition legitimzes&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;typeloadexception&quot;&gt;TypeLoadException&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;System.TypeLoadException: Could not load type &#x27;Microsoft.Testing.Platform.Extensions.TestHost.IDataConsumer&#x27; from assembly &#x27;Microsoft.Testing.Platform, Version=2.0.0.0&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;This error notes that you&#x27;re using MTP v2, and your version of xunit doesn&#x27;t support that. To keep using MTP v2, make sure sure to replace your package reference from &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; to &lt;code&gt;xunit.v3.mtp-v2&lt;&#x2F;code&gt; (&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xunit&#x2F;xunit&#x2F;issues&#x2F;3416#issuecomment-3447785145&quot;&gt;further information&lt;&#x2F;a&gt;). If you&#x27;re using centralized package managemnet, make sure you&#x27;re changing both the Directory.Packages.props file, and the test projects .csproj file.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;vstest-vs-mtp-mismatch&quot;&gt;VSTest vs MTP mismatch&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;.nuget&#x2F;packages&#x2F;microsoft.testing.platform.msbuild&#x2F;2.0.1&#x2F;buildMultiTargeting&#x2F;Microsoft.Testing.Platform.MSBuild.targets(263,5): error Testing with VSTest target is no longer supported by Microsoft.Testing.Platform on .NET 10 SDK and later. If you use dotnet test, you should opt-in to the new dotnet test experience. For more information, see https:&#x2F;&#x2F;aka.ms&#x2F;dotnet-test-mtp-error&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;If you run your tests and get the above error, you&#x27;ve forgotten to add in your &lt;code&gt;global.json&lt;&#x2F;code&gt; file, or omitted the tests section in that file.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

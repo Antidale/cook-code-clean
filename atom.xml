@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>cook. code.</title>
+    <subtitle>[tbd]</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://antidale.com/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://antidale.com/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-01-21T00:00:00+00:00</updated>
+    <id>https://antidale.com/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Melt ICE</title>
+        <published>2026-01-21T00:00:00+00:00</published>
+        <updated>2026-01-21T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/melt-ice/"/>
+        <id>https://antidale.com/blog/melt-ice/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/melt-ice/">&lt;p&gt;The time for this post was before today. Before this year. Before this presidency. Before this decade. Before the last decade. So I&#x27;m late with being vocal about it, but I also can&#x27;t allow myself to being any later than this.&lt;&#x2F;p&gt;
+&lt;p&gt;The actions of ICE need to be stopped, and the harms it is causing remedied as best that can be done. The US&#x27; entire approach to immigration needs to be recreated. The people, from any party, who have had a hand in creating this agency should never have their hands on any levers of power again. I hope they are haunted by what they&#x27;ve built every time they close their eyes.&lt;&#x2F;p&gt;
+&lt;p&gt;Beyond the necessary work of dismantling ICE, all of us who have been complacent but horrified have a duty to our neighbors to work on ourselves to be better citizens, better neighbors, better people. I know I can&#x27;t help build anything better on the foundations I currently have, and every community I&#x27;m a member of can use something better than what we have now.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m being a little vague here, because I haven&#x27;t done the work to be specific, either for what to fix in myself, or what to help build. But I do know that white supremacy is bullshit, that every single part of anti-queer, anti-gay, anti-trans discourse, activity, and legislation is so rancid. That the entire project of the right wing culture war is foul. Toxic to humanity. Reject all of it.&lt;&#x2F;p&gt;
+&lt;p&gt;(This is a rough piece, barely edited or thought through.)&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Updating to .NET 10 and MTP</title>
+        <published>2025-11-12T00:00:00+00:00</published>
+        <updated>2025-11-12T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/testing-net-10/"/>
+        <id>https://antidale.com/blog/testing-net-10/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/testing-net-10/">&lt;p&gt;A bit of a follow up to &lt;a href=&quot;https:&#x2F;&#x2F;antidale.com&#x2F;blog&#x2F;testing-ci-mtp&#x2F;&quot;&gt;this testing ci and mtp&lt;&#x2F;a&gt; post. &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;devblogs.microsoft.com&#x2F;dotnet&#x2F;announcing-dotnet-10&#x2F;&quot;&gt;.NET 10&lt;&#x2F;a&gt; is released, and with that some rejoicing (I really like idea of the new extension stuff, the field change is also cool, and null-conditional assignment is nice to have) is in order, and also there are some changes to having your tests run as you&#x27;re upgrading.&lt;&#x2F;p&gt;
+&lt;p&gt;This post is specific to what I had to do when updating to .net 10 from .net 9 while using xunit. The basic Xunit.v3 package does not work with MTP v2, so the upgrade path is slightly more complicated than just updating to the latest versions of the standard packages.&lt;&#x2F;p&gt;
+&lt;p&gt;First up, if you don&#x27;t have a &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;tools&#x2F;global-json&quot;&gt;global.json&lt;&#x2F;a&gt; file, which goes at the same level as a &lt;code&gt;.sln&lt;&#x2F;code&gt; or &lt;code&gt;.slnx&lt;&#x2F;code&gt; file, you&#x27;ll want to add that. The &lt;code&gt;dotnet new globaljson&lt;&#x2F;code&gt; command (&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;tools&#x2F;global-json&quot;&gt;docs here&lt;&#x2F;a&gt;) gets you started, and then add in this section:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;json&quot;&gt;    &amp;quot;test&amp;quot;: {
+        &amp;quot;runner&amp;quot;: &amp;quot;Microsoft.Testing.Platform&amp;quot;
+    }
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Next, since xunit v3 seems to not support MTP v2 currently (as of 3.2.0) in the main package, you&#x27;ll need to change to a version that does, so remove the &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; or &lt;code&gt;xunit.v3.core&lt;&#x2F;code&gt; you&#x27;re currently using and add in &lt;code&gt;xunit.v3.mtp-v2&lt;&#x2F;code&gt; or &lt;code&gt;xunit.v3.core.mtp-2&lt;&#x2F;code&gt;. This &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xunit&#x2F;xunit&#x2F;issues&#x2F;3416#issuecomment-3447785145&quot;&gt;github comment&lt;&#x2F;a&gt; has more detail about the change, and further down in the discussion is why the change isn&#x27;t incoporated into the base &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; package.&lt;&#x2F;p&gt;
+&lt;p&gt;For some specific package version numbers that are working for me today:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Microsoft.NET.Test.Sdk 18.0.1&lt;&#x2F;li&gt;
+&lt;li&gt;xunit.v3.mtp-v2 3.2.0&lt;&#x2F;li&gt;
+&lt;li&gt;Microsoft.Testing.Extensions.TrxReport 2.0.2 (for creating a .trx as part of a ci build)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;And with adding in the global.json file with the test section, changing slightly the xunit package you&#x27;re referencing, and just generally getting all your packages up-to-date with .net 10, your tests should run and pass just as they did before the update.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;troubleshooting&quot;&gt;Troubleshooting&lt;&#x2F;h3&gt;
+&lt;p&gt;These are here mostly to try and catch anyone searching for specific errors, since everything&#x27;s covered above. But also, &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=LlmTWlaWs_o&amp;amp;t=150s&quot;&gt;repetition legitimzes&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;typeloadexception&quot;&gt;TypeLoadException&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;System.TypeLoadException: Could not load type &#x27;Microsoft.Testing.Platform.Extensions.TestHost.IDataConsumer&#x27; from assembly &#x27;Microsoft.Testing.Platform, Version=2.0.0.0&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;This error notes that you&#x27;re using MTP v2, and your version of xunit doesn&#x27;t support that. To keep using MTP v2, make sure sure to replace your package reference from &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; to &lt;code&gt;xunit.v3.mtp-v2&lt;&#x2F;code&gt; (&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xunit&#x2F;xunit&#x2F;issues&#x2F;3416#issuecomment-3447785145&quot;&gt;further information&lt;&#x2F;a&gt;). If you&#x27;re using centralized package managemnet, make sure you&#x27;re changing both the Directory.Packages.props file, and the test projects .csproj file.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;vstest-vs-mtp-mismatch&quot;&gt;VSTest vs MTP mismatch&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;.nuget&#x2F;packages&#x2F;microsoft.testing.platform.msbuild&#x2F;2.0.1&#x2F;buildMultiTargeting&#x2F;Microsoft.Testing.Platform.MSBuild.targets(263,5): error Testing with VSTest target is no longer supported by Microsoft.Testing.Platform on .NET 10 SDK and later. If you use dotnet test, you should opt-in to the new dotnet test experience. For more information, see https:&#x2F;&#x2F;aka.ms&#x2F;dotnet-test-mtp-error&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;If you run your tests and get the above error, you&#x27;ve forgotten to add in your &lt;code&gt;global.json&lt;&#x2F;code&gt; file, or omitted the tests section in that file.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Chickpea and Garlic Soup</title>
+        <published>2025-11-02T00:00:00+00:00</published>
+        <updated>2025-11-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/chickpea-garlic-soup/"/>
+        <id>https://antidale.com/blog/chickpea-garlic-soup/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/chickpea-garlic-soup/">&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;4-6 garlic cloves, unpeeled&lt;&#x2F;li&gt;&lt;li&gt;1 (15 oz) can chickpeas&lt;&#x2F;li&gt;&lt;li&gt;1 1&amp;#x2F;4 C broth (I usually use vegetable broth, chicken broth is very good, too)&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;2 tsp smoked paprika&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+
+    &lt;h3&gt;Optional Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;1 Tbsp lemon juice&lt;&#x2F;li&gt;&lt;li&gt;1 Tbsp minsed fresh parsley, tarragon, or chives&lt;&#x2F;li&gt;&lt;li&gt;Shredded Chicken or Turkey, precooked&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;&lt;h3 id=&quot;instructions&quot;&gt;Instructions&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;garlic-prep&quot;&gt;Garlic prep&lt;&#x2F;h4&gt;
+&lt;p&gt;Toast the garlic in a medium saucepan over medium heat, moving it around occasionally, until it is fragrant and the skins have begun to brown. Roughly five minutes.&lt;&#x2F;p&gt;
+&lt;p&gt;Alternatively, you could to some actual roasted garlic, too, but that makes this dish take a lot longer to toss together, and so I don&#x27;t normally bother.&lt;&#x2F;p&gt;
+&lt;p&gt;Either way, once the garlic is appropriately cooked, set it aside to cool enough to handle.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;soup-time&quot;&gt;Soup Time&lt;&#x2F;h4&gt;
+&lt;p&gt;Add the broth and the whole can of chickpeas, including their liquid, to the saucepan and bring to a simmer and reduce to a medium-low heat. When the garlic can be handled well enough, peel it and add it to the saucepan. Cook, stirring occasionally, until the chickpeas begin to break down, about 5 to 7 minutes. This is pretty flexible on the timing.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;finishing-steps&quot;&gt;Finishing steps&lt;&#x2F;h4&gt;
+&lt;p&gt;Process the soup in a blender, or use an immersion blender, until smooth.&lt;&#x2F;p&gt;
+&lt;p&gt;If you&#x27;re adding some extra protien, add it now and continue cooking at a low to medium-low temp until it&#x27;s brought up to temperature. A great way to use up a little leftovers.&lt;&#x2F;p&gt;
+&lt;p&gt;Off heat, season with salt, pepper, and paprika. If you&#x27;re adding some lemon juice or fresh herbs, now&#x27;s the time for those as well.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;notes&quot;&gt;Notes&lt;&#x2F;h4&gt;
+&lt;p&gt;While you can definitely do more with this, I definitely recommend keeping this simple, it&#x27;s a very nice soup that&#x27;s easy to throw together.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s very easy to double (or more) the recipe, and it freezes very well.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.americastestkitchen.com&#x2F;recipes&#x2F;13903-5-ingredient-creamy-chickpeas-and-roasted-garlic-soup-for-one&#x2F;print&quot;&gt;Recipe based on this from America&#x27;s Test Kitchen&lt;&#x2F;a&gt; (you&#x27;ll need an active subscription to actually see the recipe)&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Unit Testing, CI, &amp; Microsoft Test Platform</title>
+        <published>2025-08-12T00:00:00+00:00</published>
+        <updated>2025-08-12T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/testing-ci-mtp/"/>
+        <id>https://antidale.com/blog/testing-ci-mtp/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/testing-ci-mtp/">&lt;h2 id=&quot;the-tl-dr&quot;&gt;The TL,DR:&lt;&#x2F;h2&gt;
+&lt;p&gt;If you want to have tests that are using Microsot.Testing.Platform (MTP) instead of VSTest and you want a &lt;code&gt;.trx&lt;&#x2F;code&gt; file so that you can have your CI pipeline have all what it needs to report on the tests that are running, you need to make sure to add the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.nuget.org&#x2F;packages&#x2F;Microsoft.Testing.Extensions.TrxReport&#x2F;&quot;&gt;Microsoft.Testing.Extensions.TrxReport&lt;&#x2F;a&gt; nuget package. If you want a little more direction, you can check out the code examples below.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-story-up-to-that-point&quot;&gt;The story up to that point&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;testing&#x2F;microsoft-testing-platform-intro?tabs=dotnetcli&quot;&gt;Microsoft Testing Platform&lt;&#x2F;a&gt;
+is an alternative&#x2F;update to VSTest, which up to now had been the underlying mechanism for how tests generally ran. You can check out some differences &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;testing&#x2F;microsoft-testing-platform-vs-vstest&quot;&gt;between them&lt;&#x2F;a&gt;, but for the most part, I was just looking to check out a new tool and try some stuff out. Also, I&#x27;d heard about &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;intro&quot;&gt;Tunit&lt;&#x2F;a&gt;, so I used it for a quick little project I had and figured that I could use a little practice setting up some CI pipelines.&lt;&#x2F;p&gt;
+&lt;p&gt;Reading documentation, it seemed mostly straightfoward to make the switch. Take out some NuGet packages you didn&#x27;t need anymore, update your project to output as an EXE, maybe add a couple of properties to your .csproj and things should Just Work. Except they didn&#x27;t. By default, stuff using MTP doesn&#x27;t output a &lt;code&gt;.trx&lt;&#x2F;code&gt; file, instead putting a &lt;code&gt;.log&lt;&#x2F;code&gt; file in a TestResults file where all the binaries are for that compilation. CI stuff seems like it still expects to see &lt;code&gt;.trx&lt;&#x2F;code&gt; files, which: totally understandable and correct. Not only has it been around for ages, it also has lots of detail, which the &lt;code&gt;.log&lt;&#x2F;code&gt; files don&#x27;t; they&#x27;re just pretty much the same high level output as you see on the console when running tests through &lt;code&gt;dotnet test&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The main trouble I ran into was getting &lt;code&gt;MSBUILD : error MSB1001: Unknown switch.&lt;&#x2F;code&gt; when trying arguments that each TUnit and XUnit suggest should work to get a &lt;code&gt;.trx&lt;&#x2F;code&gt; to be generated. Sleeping, more trial and error, and just doing the right searching on TUnit&#x27;s documentation site got me to where I saw that I was missing a required NuGet package, and after adding it both of the projects I was tinkering with started working as I wanted in my ci pipelines. I&#x27;ve since seen a note that I must have just glossed over in Tunits docs that would have saved me some time, but it was divorced enough from the context in my head for what I wanted (&quot;I need something to make this work on CI!&quot;), that I was blind to the context where the information was offered, and where it truthfully fits a lot better than where I imagined I wanted it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;azure-pipelines&quot;&gt;Azure Pipelines&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;yml&quot;&gt;- script: dotnet run --project .&#x2F;FreeEnterprise.Api.UnitTests&#x2F;FreeEnterprise.Api.UnitTests.csproj -c Release --report-trx --results-directory . --report-trx-filename results.trx
+  displayName: &amp;#39;Run tests&amp;#39;
+  continueOnError: false
+
+- task: PublishTestResults@2
+  displayName: &amp;#39;Publish Test Results&amp;#39;
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: &amp;#39;results.trx&amp;#39;
+    searchFolder: &amp;#39;.&amp;#39;
+    failTaskOnFailedTests: true
+    failTaskOnMissingResultsFile: true
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I could almost certainly specify things a bit less stringently. I&#x27;d started with sample code that I &lt;em&gt;mostly&lt;&#x2F;em&gt; copied from &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;intro&quot;&gt;Tunit&#x27;s Documentation&lt;&#x2F;a&gt; for &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;examples&#x2F;tunit-ci-pipeline&quot;&gt;TUnit in CI pipelines&lt;&#x2F;a&gt; and very much missed the part in the script step where the &lt;code&gt;--results-directory&lt;&#x2F;code&gt; gets set, but included the specified folder in the publish step, and the step kept failing, because it was looking in the wrong place. For what I&#x27;m doing, having the test results populate in the current directory is fine. I also had trouble having the script use &lt;code&gt;dotnet test&lt;&#x2F;code&gt; over &lt;code&gt;dotnet run&lt;&#x2F;code&gt;, even with using &lt;code&gt;-- --report-trx&lt;&#x2F;code&gt; as expected (and after adding the TrxReport nuget package) and work out on the CI servers, so &lt;code&gt;dontnet run&lt;&#x2F;code&gt; it is.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;csproj-files&quot;&gt;.csproj files&lt;&#x2F;h3&gt;
+&lt;p&gt;For reference, here are examples of the .csproj files for two different of my test projects, the first using TUnit, the second using XUnit.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;tunit&quot;&gt;TUnit&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;xml&quot;&gt;  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;!-- Minimim required --&amp;gt;
+    &amp;lt;OutputType&amp;gt;Exe&amp;lt;&#x2F;OutputType&amp;gt;
+  &amp;lt;&#x2F;PropertyGroup&amp;gt;
+  &amp;lt;!-- This is actually my entire ItemGroup for NuGet pacakges in this project --&amp;gt;
+  &amp;lt;ItemGroup&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Microsoft.Testing.Extensions.TrxReport&amp;quot; Version=&amp;quot;1.8.2&amp;quot; &#x2F;&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;TUnit&amp;quot; Version=&amp;quot;0.55.6&amp;quot; &#x2F;&amp;gt;
+  &amp;lt;&#x2F;ItemGroup&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;xunit&quot;&gt;XUnit&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;xml&quot;&gt;    &amp;lt;PropertyGroup&amp;gt;
+        &amp;lt;!-- 
+            Removing some not relevant things in the group
+        --&amp;gt;
+        &amp;lt;OutputType&amp;gt;Exe&amp;lt;&#x2F;OutputType&amp;gt;
+        &amp;lt;UseMicrosoftTestingPlatformRunner&amp;gt;true&amp;lt;&#x2F;UseMicrosoftTestingPlatformRunner&amp;gt;
+        &amp;lt;TestingPlatformDotnetTestSupport&amp;gt;true&amp;lt;&#x2F;TestingPlatformDotnetTestSupport&amp;gt;
+    &amp;lt;&#x2F;PropertyGroup&amp;gt;
+    &amp;lt;ItemGroup&amp;gt;
+        &amp;lt;!-- 
+            Again, minimal entries required are shown
+        --&amp;gt;
+        &amp;lt;PackageReference Include=&amp;quot;Microsoft.Testing.Extensions.TrxReport&amp;quot; &#x2F;&amp;gt;
+        &amp;lt;PackageReference Include=&amp;quot;xunit.v3&amp;quot; &#x2F;&amp;gt;
+    &amp;lt;&#x2F;ItemGroup&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>make code</title>
+        <published>2025-08-10T00:00:00+00:00</published>
+        <updated>2025-08-10T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/make-code/"/>
+        <id>https://antidale.com/blog/make-code/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/make-code/">&lt;p&gt;One of the things I find to be small hassle in using the dotnet cli for running projects via &lt;code&gt;dotnet run&lt;&#x2F;code&gt; is having to specify the target project as soon as I add some testing projects to the solution. I know I could always &lt;code&gt;cd&lt;&#x2F;code&gt; to the folder of the relevant &lt;code&gt;.csproj&lt;&#x2F;code&gt; file, but that&#x27;s roughly equal hassle, and I generally prefer to just stay at the root of a project most of the time. I took a little time recently to see if maybe things had changed and you could specify a default project in a &lt;code&gt;.sln&lt;&#x2F;code&gt; or &lt;code&gt;.slnx&lt;&#x2F;code&gt; file, but alas.&lt;&#x2F;p&gt;
+&lt;p&gt;However, this &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;59942079&quot;&gt;stack overflow answer suggesting using a Makefile&lt;&#x2F;a&gt; is a really good solution for me. As a solution, I think it is very customizable, less of a bother than making shell scripts for it, and clear what&#x27;s going on when you look at it. My favorite little thing is that running &lt;code&gt;make watch-test&lt;&#x2F;code&gt; doesn&#x27;t actually change the directory of the terminal, so when I stop running tests under the watch, I&#x27;m still at the directory root. Delightful!&lt;&#x2F;p&gt;
+&lt;p&gt;Here&#x27;s what I currently have going on in for the one place I&#x27;m currently using it (folder names redacted)&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;make&quot;&gt;watch:
+	dotnet watch run --project .&#x2F;SomeFolder&#x2F;SomeFolder.csproj
+run:
+	dotnet run --project .&#x2F;SomeFolder&#x2F;SomeFolder.csproj
+watch-test:
+	cd .&#x2F;SomeFolder.UnitTests &amp;amp;&amp;amp; dotnet watch test
+outdated:
+	dotnet outdated -exc FluentAssertions
+outdated-upgrade:
+	dotnet outdated -exc FluentAssertions -u
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Lemon Posset</title>
+        <published>2025-06-03T00:00:00+00:00</published>
+        <updated>2025-06-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/lemon-posset/"/>
+        <id>https://antidale.com/blog/lemon-posset/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/lemon-posset/">&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;1 pint (16 oz) heavy cream&lt;&#x2F;li&gt;&lt;li&gt;3-4 smallish lemons, zested and juiced&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;2 cup sugar&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;8 tsp vanilla powder (optional)&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;&lt;h3 id=&quot;instructions&quot;&gt;Instructions&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;prep&quot;&gt;Prep&lt;&#x2F;h4&gt;
+&lt;p&gt;Zest and juice the lemons.&lt;&#x2F;p&gt;
+&lt;p&gt;The recipe is forgiving in nature, but you&#x27;re looking for between over 1 and 1.5 tbsp of lemon zest, and between 1&#x2F;4 and 1&#x2F;2 cups of lemon juice.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;cooking&quot;&gt;Cooking&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Combine cream, sugar, and lemon zest in a medium saucepan and bring to a boil over medium heat, cook for 8 to 12 minutes, or until the mixture is reduced to about 2 cups. Stir frequently to fully incorporate the sugar and reduce the chance of things boiling over. Even when you&#x27;re not stirring, keep an eye on it and be ready to temporarily remove it from the heat to prevent it from boiling over.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Remove the saucepan from the heat and stir in the lemon juice. Let cool for about 20 minutes (a skin should form on top). Strain through a fine mesh strainer to separate out the zest. If using the vanilla, now&#x27;s a great time to add it. Pour strained mixture into whatever serving option you&#x27;ve chosen. Individual ramekins or glasses are common, but I&#x27;m often putting it into a 2 cup container of some sort&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Refrigerate, uncovered, until the posset sets, at least 3 hours. Once chilled, wrap in plastic wrap and they&#x27;ll keep for a couple&#x2F;few days. Adding some berries at the end is nice.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Roasted Butternut Squash</title>
+        <published>2025-02-04T00:00:00+00:00</published>
+        <updated>2025-02-04T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/roasted-butternut-squash/"/>
+        <id>https://antidale.com/blog/roasted-butternut-squash/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/roasted-butternut-squash/">&lt;img src=&quot;..&#x2F;prepped_squash.jpg&quot; width=&quot;300&quot; &#x2F;&gt;
+&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;1 Butternut squash&lt;&#x2F;li&gt;&lt;li&gt;Olive oil to lightly coat&lt;&#x2F;li&gt;&lt;li&gt;large pinch salt&lt;&#x2F;li&gt;&lt;li&gt;pepper to taste&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+
+    &lt;h3&gt;Optional Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;large pinch Gochujaru&lt;&#x2F;li&gt;&lt;li&gt;pinch cinnamon&lt;&#x2F;li&gt;&lt;li&gt;zest &amp;amp; juice of 1 lemon&lt;&#x2F;li&gt;&lt;li&gt;pinch paprika (your choice of sweet, hot, or smoked)&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;&lt;h3 id=&quot;steps&quot;&gt;Steps&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Preheat the oven to 450°F.&lt;&#x2F;li&gt;
+&lt;li&gt;Peel the squash, cut off top&#x2F;handle and bottom&#x2F;root.&lt;&#x2F;li&gt;
+&lt;li&gt;Slice the remaining top section into about 1&#x2F;2&quot; rounds&lt;&#x2F;li&gt;
+&lt;li&gt;Once you hit the bottom section where the pulp&#x2F;seeds are, remove them, and then dice this section into about 1&#x2F;2&quot; cubes&lt;&#x2F;li&gt;
+&lt;li&gt;line a sheet pan with parchment (mostly for helping cleanup)&lt;&#x2F;li&gt;
+&lt;li&gt;place squash on sheet pan, arranging the cubes in the middle and surrounding them with the rounds&lt;&#x2F;li&gt;
+&lt;li&gt;drizzle oil over the squash&lt;&#x2F;li&gt;
+&lt;li&gt;add the large pinch of salt&lt;&#x2F;li&gt;
+&lt;li&gt;grind pepper over the squash&lt;&#x2F;li&gt;
+&lt;li&gt;for any of the optional ingredients, choose one or two and add them on top. (Lemon juice&#x2F;zest go on at the end, not here)&lt;&#x2F;li&gt;
+&lt;li&gt;thouroughly mix&#x2F;coat the squash with the oil, salt, pepper, and additional ingredients on both sides&lt;&#x2F;li&gt;
+&lt;li&gt;bake for about 15 minutes&lt;&#x2F;li&gt;
+&lt;li&gt;flip rounds and flip&#x2F;mix cubes as best you can&lt;&#x2F;li&gt;
+&lt;li&gt;bake for another 15 minutes&lt;&#x2F;li&gt;
+&lt;li&gt;remove from oven, and if you&#x27;re adding lemon juice&#x2F;zest, now&#x27;s the time to add it to the squash.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;img src=&quot;..&#x2F;roasted_squash.jpg&quot; width=&quot;300&quot; &#x2F;&gt;
+&lt;p&gt;The rounds are nicely versatile, either making a patty that fits well into an english muffin, a nice side, or can be cut into cubes for a salad. The cubes themselves I normally refrigerate and add to salads over the next couple of days. Adding them to rice or quinoa is also nice.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Rice Cooker Oatmeal</title>
+        <published>2025-01-10T00:00:00+00:00</published>
+        <updated>2025-01-10T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/rice-cooker-oatmeal/"/>
+        <id>https://antidale.com/blog/rice-cooker-oatmeal/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/rice-cooker-oatmeal/">&lt;p&gt;This is a nice recipe for getting your rice cooker to make you breakfast, and makes enough for me to get three breakfasts from it. I often set it up the night before and wake up to hot oatmeal in the winter, and then can decide to reheat the extra portions on subsequent days or just have the leftovers cold. This set assumes you&#x27;re using a NS-ZCC10 from Zojirushi, check your own cooker&#x27;s instrucions for porridge&#x2F;oatmeal style options.&lt;&#x2F;p&gt;
+&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;1 &amp;#x27;cup&amp;#x27; steel-cut oats&lt;&#x2F;li&gt;&lt;li&gt;4 &amp;#x27;cups&amp;#x27; water&lt;&#x2F;li&gt;&lt;li&gt;2 tbsp chia seeds&lt;&#x2F;li&gt;&lt;li&gt;pinch salt&lt;&#x2F;li&gt;&lt;li&gt;1 to 2 tbsp dried cherries (or other dried fruit bits)&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+
+    &lt;h3&gt;Optional Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;splash of almond extract&lt;&#x2F;li&gt;&lt;li&gt;pinch of vanilla powder (or splash of vanilla extract)&lt;&#x2F;li&gt;&lt;li&gt;up to 1&amp;#x2F;4 C milk-substance (cream, various non-dairy milks, whatever you want, or not)&lt;&#x2F;li&gt;&lt;li&gt;1 tbsp peanut butter powder&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;2 to 1 tsp cinnamon or pie spice blend&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;&lt;h3 id=&quot;directions&quot;&gt;Directions&lt;&#x2F;h3&gt;
+&lt;p&gt;Take the ingredients in the Base section and put in them in the rice cooker, and stir it about a bit. The &quot;cup&quot; measurement uses the cup provided with the cooker, which is roughly 3&#x2F;4 C. Set the cooker&#x27;s mode to Porridge and start it (or set the timer, if setting up overnight).&lt;&#x2F;p&gt;
+&lt;p&gt;Once the cooker is done, stop the keep warm setting, and stir the oatmeal to more full mix the water and get a more even consistency. Stir in whatever of the Extras you want. Add in extra liquids a bit at a time until you hit the thickness you&#x27;re looking for. I don&#x27;t think I ever hit 1&#x2F;4 cup of added milk product.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;ve also used dried diced apples as the fruit and applesauce as the extra, post-cooking liquid, it was good but maybe a little too sweet for me.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Gochujang Alfredo</title>
+        <published>2025-01-09T00:00:00+00:00</published>
+        <updated>2025-01-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/gochujang-alfredo/"/>
+        <id>https://antidale.com/blog/gochujang-alfredo/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/gochujang-alfredo/">&lt;img src=&quot;..&#x2F;gochujang_alfredo.jpg&quot; width=&quot;300&quot; &#x2F;&gt;
+&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;5 garlic cloves&lt;&#x2F;li&gt;&lt;li&gt;2-3 green onions&lt;&#x2F;li&gt;&lt;li&gt;1 cup (50g) freshly grated Parmigiano-Reggiano cheese, plus more to serve&lt;&#x2F;li&gt;&lt;li&gt;Kosher salt, to season&lt;&#x2F;li&gt;&lt;li&gt;16 oz pasta. Recommened types: pappardelle, fettuccini, linguine, penne, bow ties. You do you, though.&lt;&#x2F;li&gt;&lt;li&gt;3 tbsp (42g) butter (if you&amp;#x27;re using salted butter, adjust salt added for seasoning appropriately)&lt;&#x2F;li&gt;&lt;li&gt;5&amp;#x2F;4 cups heavy cream&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 cup reserved pasta water, plus more if needed (you probably don&amp;#x27;t, and 1&amp;#x2F;4 C seems likely to be too much)&lt;&#x2F;li&gt;&lt;li&gt;1 tbsp gochujang&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;2 tbsp gochugaru (if you don&amp;#x27;t have gochujaru, substitute other ground chili peppers&amp;#x2F;chili pepper flakes)&lt;&#x2F;li&gt;&lt;li&gt;1 tbsp oyster sauce&lt;&#x2F;li&gt;&lt;li&gt;Black pepper, to serve&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;&lt;h3 id=&quot;instructions&quot;&gt;Instructions&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;prep&quot;&gt;Prep&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Finely chop the garlic cloves. Thinly slice the green onions, separating the whites and greens.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Grate about 1 cup (or 50 grams) of Parmigiano-Reggiano.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Combine all the seasonings (gochujang, gochugaru, oyster sauce) in a small container and mix well.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;cooking&quot;&gt;Cooking&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Bring a pot of salted water to a boil. Add the pasta and cook according to the package instructions or until al dente. (Reserve at least 1&#x2F;4 cup of the pasta cooking water).&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;While the pasta is cooking, add 3 tablespoons of butter to a large pan over medium-low. Once the butter is melted, add the garlic and white parts of the green onions. Saute for 2 minutes or until they start to pick up a little bit of color.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Add the gochujang mixture. Saute for 2 to 3 minutes. Add the heavy cream and stir. Gently simmer for another 2 to 3 minutes or until the sauce gets a little bit thicker.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Add 1 cup of freshly grated Parmigiano-Reggiano. Stir until everything is well combined.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Use tongs to take out the pasta and add it to the sauce. Add about 1&#x2F;4 cup (60ml) of the reserved pasta water and mix well. (If the sauce gets too thick, you can add a little bit more pasta water.)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Turn the heat off. Taste and add some salt to taste. Divide the pasta into serving bowls. Top with a few shakes of black pepper, green onions, and Parmigiano-Reggiano.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;aaronandclaire.com&#x2F;creamy-gochujang-pasta&#x2F;#wpzoom-recipe-card&quot;&gt;Recipe Source&lt;&#x2F;a&gt; - &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=hEE01jL1qXw&amp;amp;vl=en&quot;&gt;Recipe Video&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;notes&quot;&gt;Notes&lt;&#x2F;h3&gt;
+&lt;p&gt;I didn&#x27;t have any gochugaru when I made this the first time, and substituting 1 tsp Aleppo pepper and 1tsp paprika was very tasty. I also used closer to 4tbsp of butter, just to finish off the stick.&lt;&#x2F;p&gt;
+&lt;p&gt;The original recipe only calls for 6oz pasta, but that feels to me like way too little for the amount of sauce that gets made with this, and I did not come close to adding a full 1&#x2F;4 C of pasta water.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Variable like queries in Postgres</title>
+        <published>2025-01-01T00:00:00+00:00</published>
+        <updated>2025-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/variable-like-queries-postgres/"/>
+        <id>https://antidale.com/blog/variable-like-queries-postgres/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/variable-like-queries-postgres/">&lt;p&gt;I&#x27;ll start off with an acknowledgment that the title of this post probably isn&#x27;t quite right. It took a few tries at searching out the information that I actually wanted, which was a way to write a query like the following, but have it adhere to Postgres&#x27; standards&#x2F;synatax&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;sql&quot;&gt;
+    Declare @someVariable varchar(max) = &amp;#39;My Value&amp;#39;
+
+    select * 
+    from SomeTable
+    where SomeColumn = @someVariable
+
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Postgres doesn&#x27;t handle variables that way, and if you want to use them, you&#x27;re using PLPGSQL and doing your work within a DO&#x2F;END block, which carries some restrictions on what you can do with it. &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.postgresql.org&#x2F;docs&#x2F;current&#x2F;plpgsql.html&quot;&gt;Documentation.&lt;&#x2F;a&gt; (or you&#x27;re doing something in psql)&lt;&#x2F;p&gt;
+&lt;p&gt;So instead, general suggestions are to use either a CTE or a temp table to store what would be your variables and use them in your query. This &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;1490942&#x2F;declare-a-variable-in-a-postgresql-query&quot;&gt;stack overflow&lt;&#x2F;a&gt; post has examples of all the above methods (PLPGSQL, CTEs, temp tables, and a couple of other options besides).&lt;&#x2F;p&gt;
+&lt;p&gt;I liked the CTE approach for the specific use-case I had, and it made it work more nicely in my brain when I went from a single value to updating a number of rows in the database. In the end, I had something like this to going:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;sql&quot;&gt;
+    WITH data (userId, displayName, tournamentName) AS (
+    values 
+        (&amp;#39;472321239864705034&amp;#39;, &amp;#39;somename&amp;#39;, &amp;#39;test updates&amp;#39;),
+        (&amp;#39;someId_1&amp;#39;, &amp;#39;somename_1&amp;#39;, &amp;#39;test updates&amp;#39;),
+        (&amp;#39;someId_2&amp;#39;, &amp;#39;somename_2&amp;#39;, &amp;#39;test updates&amp;#39;)
+    )
+
+    update tournament.registrations r
+    set user_name_alias = d.displayName
+    from tournament.tournament_registrations tr
+    join data d on d. userId = tr.user_id 
+    where tr.tournament_id = r.tournament_id 
+    and tr.user_id = d.userId
+    and tr.entrant_id = r.entrant_id
+    and (d.tournamentName = &amp;#39;&amp;#39; 
+        or tr.tournament_name = d.tournamentName)
+
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The downside of using a common table expression is that you can&#x27;t re-use it later on if you&#x27;re doing multiple queries. IN case you do need to re-use your setup, you&#x27;d change to inserting the data into a temp table, and just move on from there. Temp tables have their own issues, so, you know, pick what&#x27;s right for you.&lt;&#x2F;p&gt;
+&lt;p&gt;All of this was needed because I give myself lots of room in my schema design to shoot myslef in the foot just this way. I probably should have just designed the system so that the display name is just per user, but instead I have it per tournament the user is registered for.&lt;&#x2F;p&gt;
+&lt;p&gt;Also could have avoided figuring this out in production with better testing, either automated or manual. That&#x27;s for a different day, though.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Potato Soup</title>
+        <published>2024-12-22T00:00:00+00:00</published>
+        <updated>2024-12-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/potato-soup/"/>
+        <id>https://antidale.com/blog/potato-soup/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/potato-soup/">&lt;p&gt;A recipe very lightly adapted from &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;ourbalancedbowl.com&#x2F;wprm_print&#x2F;loaded-baked-potato-chowder&quot;&gt;Our Balanced Bowl&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;6 oz pack of bacon (half of a normal 12 oz one, really)&lt;&#x2F;li&gt;&lt;li&gt;1 large yellow onion, diced&lt;&#x2F;li&gt;&lt;li&gt;1-2 large clove garlic, minced&lt;&#x2F;li&gt;&lt;li&gt;1 tbsp all purpose flour&lt;&#x2F;li&gt;&lt;li&gt;16 oz chicken broth&lt;&#x2F;li&gt;&lt;li&gt;1.5 to 2 lbs russet potatoes, chopped into bite size pieces&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 cup sour cream&lt;&#x2F;li&gt;&lt;li&gt;1 cup freshly shredded cheddar cheese&lt;&#x2F;li&gt;&lt;li&gt;3&amp;#x2F;4 cup heavy cream&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 tsp salt (add more if needed!)&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 tsp garlic powder&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 tsp onion powder&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 tsp smoked paprika&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 tsp chipotle powder (or other single-chile powder)&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 tsp cracked pepper&lt;&#x2F;li&gt;&lt;li&gt;chopped green onions for garnish&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;&lt;h3 id=&quot;steps&quot;&gt;Steps&lt;&#x2F;h3&gt;
+&lt;p&gt;Begin by prepping the ingredients.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dice onion into bite size pieces&lt;&#x2F;li&gt;
+&lt;li&gt;Mince the garlic&lt;&#x2F;li&gt;
+&lt;li&gt;Wash and chop the potatoes into bite size pieces&lt;&#x2F;li&gt;
+&lt;li&gt;Dice bacon into bite size pieces.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Add a splash of oil into a large Dutch oven and let it get warm on medium heat. Once the pot is hot, add the bacon and cook until crispy, about 3-4 minutes, stirring occasionally to make sure it doesn&#x27;t burn.&lt;&#x2F;p&gt;
+&lt;p&gt;Once the bacon is crispy, remove it onto a paper towel lined plate. I usually take about half of the grease and save it for other uses later. The other half stays in the pot.&lt;&#x2F;p&gt;
+&lt;p&gt;To the pot, add in the chopped onion and a pinch of salt. Cook for 3-4 minutes.&lt;&#x2F;p&gt;
+&lt;p&gt;Add in the garlic and cook for 1 minute.&lt;&#x2F;p&gt;
+&lt;p&gt;Add in the flour and stir until it coats the veggies and cook for 1 minute. Add in the other spices and have it coat the veggies as well.&lt;&#x2F;p&gt;
+&lt;p&gt;Add in the chicken broth and whisk to combine, making sure to get all the bits of bacon off the bottom of the pot.&lt;&#x2F;p&gt;
+&lt;p&gt;Add in the potatoes. Let boil gently for 10-15 minutes or so until the potatoes are fork tender.&lt;&#x2F;p&gt;
+&lt;p&gt;While the potatoes are cooking, you have time to assemble the dairy, so grate the cheese, and measure out your sour cream and heavy cream. Combine the dairy in a bowl to make it easy to do a little tempering.&lt;&#x2F;p&gt;
+&lt;p&gt;Once potatoes are fork tender, turn down the heat. Take some of the hot broth and add it to the combined dairy to temper it. Once the dairy&#x27;s temp has been brough up a bit, mix it into the soup. Add in most of the bacon bits. Heat a little while, but not to boiling.&lt;&#x2F;p&gt;
+&lt;p&gt;Serve immediately once soup is warmed in bowls - garnish with green onions, extra bacon bits and extra shredded cheese.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Rice Cooker Quinoa</title>
+        <published>2024-12-17T22:25:00-08:00</published>
+        <updated>2024-12-17T22:25:00-08:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/rice-cooker-quinoa/"/>
+        <id>https://antidale.com/blog/rice-cooker-quinoa/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/rice-cooker-quinoa/">&lt;p&gt;I made a quick &quot;just kinda toss things together&quot; late snack that I want to write down so I can remember it later (I mean, I&#x27;m also going to toss this into &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.paprikaapp.com&#x2F;&quot;&gt;Paprika&lt;&#x2F;a&gt;, but this way I can share it a little more easily).&lt;&#x2F;p&gt;
+&lt;div class=&quot;ingredients-section&quot;&gt;
+    &lt;h3&gt;Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;1 &amp;#x27;cup&amp;#x27; rinsed quinoa&lt;&#x2F;li&gt;&lt;li&gt;1 1&amp;#x2F;4 &amp;#x27;cup&amp;#x27; water&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 tsp smoked paprika&lt;&#x2F;li&gt;&lt;li&gt;1 tsp soy sauce&lt;&#x2F;li&gt;&lt;li&gt;1&amp;#x2F;4 tsp Balti Seasoning*&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+
+    &lt;h3&gt;Optional Ingredients&lt;&#x2F;h3&gt;
+    &lt;div class=&quot;ingredients-list&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;1 Tbsp Olive oil&lt;&#x2F;li&gt;&lt;li&gt;1 Onion, minced&lt;&#x2F;li&gt;&lt;li&gt;1-2 Carrots, chopped finely&lt;&#x2F;li&gt;&lt;li&gt;generous pinch of sumac&lt;&#x2F;li&gt;&lt;li&gt;pinch chipotle powder&lt;&#x2F;li&gt;&lt;li&gt;1 C water&lt;&#x2F;li&gt;&lt;li&gt;salt to taste&lt;&#x2F;li&gt;&lt;li&gt;balsalmic vinegar to taste&lt;&#x2F;li&gt;&lt;li&gt;1-2 Tbsp nutritional yeast&lt;&#x2F;li&gt;&lt;li&gt;salt and pepper to taste&lt;&#x2F;li&gt;
+        &lt;&#x2F;ul&gt;
+    &lt;&#x2F;div&gt;
+    
+&lt;&#x2F;div&gt;
+&lt;p&gt;Put all the Ingredients in the rice cooker, set to Quick (for me and my NS-ZCC10 model of Zojirushi&#x27;s Fuzzy Logic cooker, follow your own model&#x27;s instructions), and let the cooker do it&#x27;s thing. While that&#x27;s going, then it&#x27;s time to cook the &quot;optional&quot; ingredients:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Prep the onion and carrots.&lt;&#x2F;li&gt;
+&lt;li&gt;Heat a pan, add in the oil and do the normal thing for checking to see that everything&#x27;s hot enough.&lt;&#x2F;li&gt;
+&lt;li&gt;Put in the onions, and add some salt. Give them a good couple minutes head start on the carrots.&lt;&#x2F;li&gt;
+&lt;li&gt;Once the onions have enouch color for you, mine were a good golden brown, add in the carrots. Get those going a bit, and then add in the sumac and chipotle powder.&lt;&#x2F;li&gt;
+&lt;li&gt;Add in the water, get it to a boil, cover and turn down the heat to just a simmer.&lt;&#x2F;li&gt;
+&lt;li&gt;Cook for 10-15 minutes, or until you hit your preferred doneness&#x2F;texture on the veggies. Don&#x27;t burn the onions (but if you do a little, it isn&#x27;t the end of the world).&lt;&#x2F;li&gt;
+&lt;li&gt;Remove from heat, and add in the balsalmic vinegar.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Once both parts are done, add the veggies to the quinoa, stir in the nutritional yeast, and make any adjustments for salt&#x2F;pepper.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;alterations-extra-notes&quot;&gt;Alterations&#x2F;Extra notes&lt;&#x2F;h4&gt;
+&lt;p&gt;The &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.penzeys.com&#x2F;online-catalog&#x2F;balti-seasoning&#x2F;c-24&#x2F;p-126&#x2F;pd-s&quot;&gt;Balti Seasoning&lt;&#x2F;a&gt; is a spice blend from Penzy&#x27;s.&lt;&#x2F;p&gt;
+&lt;p&gt;I only had carrots on hand for veggies I wanted to use, but I could very much see adding in some peppers (bell, habanero, jalapeno, serrano, whatever your fancy, although sweet&#x2F;fruity is a little more in style than vegetal tasting. mileage varies), and&#x2F;or mushrooms. Garlic too, although I think I&#x27;d want some roasted garlic more than adding a couple cloves in the sauté.&lt;&#x2F;p&gt;
+&lt;p&gt;I was cooking this in a &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.stratacookware.com&#x2F;product-page&#x2F;10-strata-carbon-steel-clad-frying-pan&quot;&gt;carbon steel&lt;&#x2F;a&gt; pan, so I didn&#x27;t want to add too much acid throughout the cooking time, which also made me not add in any of the cherry tomatoes I had on hand, and I added in the balsalmic at the very end.&lt;&#x2F;p&gt;
+&lt;p&gt;If you want to bulk this out a bit, some sort of canned beans (rinsed&#x2F;drained) added to the veggies would be good, and peas would be good, too.&lt;&#x2F;p&gt;
+&lt;p&gt;Extras freeze well, so make as big a batch as your rice cooker allows, and give future you a nice easy side to reheat.&lt;&#x2F;p&gt;
+&lt;p&gt;If you don&#x27;t have a rice cooker, I&#x27;d probably do something along the lines of an America&#x27;s Test Kitchen quinoa pilaf recipe, and do some extra work toasting the rinsed quinoa, setting it aside, then doing veggies, and adding the quinoa back into the mix when adding the water&#x2F;stock. For me, I&#x27;m trying to build up the seasoning on the pan, and have been enjoying using my rice cooker a lot, both of which informed my choices.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>tools</title>
+        <published>2024-12-13T00:00:00+00:00</published>
+        <updated>2024-12-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/tools/"/>
+        <id>https://antidale.com/blog/tools/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/tools/">&lt;img src=&quot;..&#x2F;lightbulb.jpg&quot; &#x2F;&gt;
+&lt;p&gt;This lightbulb has been blown for at least four years. I don&#x27;t actually remember how long it&#x27;s been since I had a light in the oven, but I know it was pre-Pandemic. I replaced it today, and now I don&#x27;t have to open the oven door to see if the bread is browning, or if some veggies are picking up some color as they roast. A small annoyance is now a lesson, if I remember it that way.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>repair</title>
+        <published>2024-12-10T00:00:00+00:00</published>
+        <updated>2024-12-10T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/repair/"/>
+        <id>https://antidale.com/blog/repair/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/repair/">&lt;img src=&quot;..&#x2F;broken_element.jpg&quot; width=&quot;100&quot; &#x2F;&gt;
+&lt;p&gt;For a little while, I&#x27;d noticed that one point on my oven&#x27;s heating element was brighter than the rest of it, pretty much all the time it was on. A few days ago, I was preheating the oven to bake some cookies, and took a look inside the oven and saw that the previously brighter part of the heating element was now VERY bright, possibly on fire. I turned the oven off, kept the door open to let things cool down faster, and watched as things came back to a state of Not On Fire.&lt;&#x2F;p&gt;
+&lt;p&gt;Today, the replacement element came. With the help of &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=nBu5k8ZhOoY&quot;&gt;a nice video&lt;&#x2F;a&gt; demonstrating the repair process, I manged to replace the element, even through a bit of panic when one of the connector clips had almost no extra reach, and also disappeared into the back of the oven. The cat gave some questionable supervisory help, but I&#x27;m now enjoying some of the cookies I&#x27;d intended to make last week.&lt;&#x2F;p&gt;
+&lt;img src=&quot;..&#x2F;cookies.jpg&quot; width=&quot;250&quot;&gt;</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Second Step</title>
+        <published>2024-12-10T00:00:00+00:00</published>
+        <updated>2024-12-10T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/second-step/"/>
+        <id>https://antidale.com/blog/second-step/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/second-step/">&lt;p&gt;Today we&#x27;re adding just a little bit of structure to the page in a very basic navbar. I still have to think about how I want some things to go, but while I&#x27;m thinking, we can take a next step. Plus, putting into practice the bit of reading for how Zola handles images seemed like a decent idea.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>A start</title>
+        <published>2024-12-09T00:00:00+00:00</published>
+        <updated>2024-12-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/first/"/>
+        <id>https://antidale.com/blog/first/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/first/">&lt;p&gt;Start somewhere. Think about how it went. See where you want it to go.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

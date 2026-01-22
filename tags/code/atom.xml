@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>cook. code. - code</title>
+    <subtitle>[tbd]</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://antidale.com/tags/code/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://antidale.com/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-11-12T00:00:00+00:00</updated>
+    <id>https://antidale.com/tags/code/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Updating to .NET 10 and MTP</title>
+        <published>2025-11-12T00:00:00+00:00</published>
+        <updated>2025-11-12T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/testing-net-10/"/>
+        <id>https://antidale.com/blog/testing-net-10/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/testing-net-10/">&lt;p&gt;A bit of a follow up to &lt;a href=&quot;https:&#x2F;&#x2F;antidale.com&#x2F;blog&#x2F;testing-ci-mtp&#x2F;&quot;&gt;this testing ci and mtp&lt;&#x2F;a&gt; post. &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;devblogs.microsoft.com&#x2F;dotnet&#x2F;announcing-dotnet-10&#x2F;&quot;&gt;.NET 10&lt;&#x2F;a&gt; is released, and with that some rejoicing (I really like idea of the new extension stuff, the field change is also cool, and null-conditional assignment is nice to have) is in order, and also there are some changes to having your tests run as you&#x27;re upgrading.&lt;&#x2F;p&gt;
+&lt;p&gt;This post is specific to what I had to do when updating to .net 10 from .net 9 while using xunit. The basic Xunit.v3 package does not work with MTP v2, so the upgrade path is slightly more complicated than just updating to the latest versions of the standard packages.&lt;&#x2F;p&gt;
+&lt;p&gt;First up, if you don&#x27;t have a &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;tools&#x2F;global-json&quot;&gt;global.json&lt;&#x2F;a&gt; file, which goes at the same level as a &lt;code&gt;.sln&lt;&#x2F;code&gt; or &lt;code&gt;.slnx&lt;&#x2F;code&gt; file, you&#x27;ll want to add that. The &lt;code&gt;dotnet new globaljson&lt;&#x2F;code&gt; command (&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;tools&#x2F;global-json&quot;&gt;docs here&lt;&#x2F;a&gt;) gets you started, and then add in this section:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;json&quot;&gt;    &amp;quot;test&amp;quot;: {
+        &amp;quot;runner&amp;quot;: &amp;quot;Microsoft.Testing.Platform&amp;quot;
+    }
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Next, since xunit v3 seems to not support MTP v2 currently (as of 3.2.0) in the main package, you&#x27;ll need to change to a version that does, so remove the &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; or &lt;code&gt;xunit.v3.core&lt;&#x2F;code&gt; you&#x27;re currently using and add in &lt;code&gt;xunit.v3.mtp-v2&lt;&#x2F;code&gt; or &lt;code&gt;xunit.v3.core.mtp-2&lt;&#x2F;code&gt;. This &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xunit&#x2F;xunit&#x2F;issues&#x2F;3416#issuecomment-3447785145&quot;&gt;github comment&lt;&#x2F;a&gt; has more detail about the change, and further down in the discussion is why the change isn&#x27;t incoporated into the base &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; package.&lt;&#x2F;p&gt;
+&lt;p&gt;For some specific package version numbers that are working for me today:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Microsoft.NET.Test.Sdk 18.0.1&lt;&#x2F;li&gt;
+&lt;li&gt;xunit.v3.mtp-v2 3.2.0&lt;&#x2F;li&gt;
+&lt;li&gt;Microsoft.Testing.Extensions.TrxReport 2.0.2 (for creating a .trx as part of a ci build)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;And with adding in the global.json file with the test section, changing slightly the xunit package you&#x27;re referencing, and just generally getting all your packages up-to-date with .net 10, your tests should run and pass just as they did before the update.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;troubleshooting&quot;&gt;Troubleshooting&lt;&#x2F;h3&gt;
+&lt;p&gt;These are here mostly to try and catch anyone searching for specific errors, since everything&#x27;s covered above. But also, &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=LlmTWlaWs_o&amp;amp;t=150s&quot;&gt;repetition legitimzes&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;typeloadexception&quot;&gt;TypeLoadException&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;System.TypeLoadException: Could not load type &#x27;Microsoft.Testing.Platform.Extensions.TestHost.IDataConsumer&#x27; from assembly &#x27;Microsoft.Testing.Platform, Version=2.0.0.0&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;This error notes that you&#x27;re using MTP v2, and your version of xunit doesn&#x27;t support that. To keep using MTP v2, make sure sure to replace your package reference from &lt;code&gt;xunit.v3&lt;&#x2F;code&gt; to &lt;code&gt;xunit.v3.mtp-v2&lt;&#x2F;code&gt; (&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xunit&#x2F;xunit&#x2F;issues&#x2F;3416#issuecomment-3447785145&quot;&gt;further information&lt;&#x2F;a&gt;). If you&#x27;re using centralized package managemnet, make sure you&#x27;re changing both the Directory.Packages.props file, and the test projects .csproj file.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;vstest-vs-mtp-mismatch&quot;&gt;VSTest vs MTP mismatch&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;.nuget&#x2F;packages&#x2F;microsoft.testing.platform.msbuild&#x2F;2.0.1&#x2F;buildMultiTargeting&#x2F;Microsoft.Testing.Platform.MSBuild.targets(263,5): error Testing with VSTest target is no longer supported by Microsoft.Testing.Platform on .NET 10 SDK and later. If you use dotnet test, you should opt-in to the new dotnet test experience. For more information, see https:&#x2F;&#x2F;aka.ms&#x2F;dotnet-test-mtp-error&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;If you run your tests and get the above error, you&#x27;ve forgotten to add in your &lt;code&gt;global.json&lt;&#x2F;code&gt; file, or omitted the tests section in that file.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Unit Testing, CI, &amp; Microsoft Test Platform</title>
+        <published>2025-08-12T00:00:00+00:00</published>
+        <updated>2025-08-12T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/testing-ci-mtp/"/>
+        <id>https://antidale.com/blog/testing-ci-mtp/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/testing-ci-mtp/">&lt;h2 id=&quot;the-tl-dr&quot;&gt;The TL,DR:&lt;&#x2F;h2&gt;
+&lt;p&gt;If you want to have tests that are using Microsot.Testing.Platform (MTP) instead of VSTest and you want a &lt;code&gt;.trx&lt;&#x2F;code&gt; file so that you can have your CI pipeline have all what it needs to report on the tests that are running, you need to make sure to add the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.nuget.org&#x2F;packages&#x2F;Microsoft.Testing.Extensions.TrxReport&#x2F;&quot;&gt;Microsoft.Testing.Extensions.TrxReport&lt;&#x2F;a&gt; nuget package. If you want a little more direction, you can check out the code examples below.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-story-up-to-that-point&quot;&gt;The story up to that point&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;testing&#x2F;microsoft-testing-platform-intro?tabs=dotnetcli&quot;&gt;Microsoft Testing Platform&lt;&#x2F;a&gt;
+is an alternative&#x2F;update to VSTest, which up to now had been the underlying mechanism for how tests generally ran. You can check out some differences &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;learn.microsoft.com&#x2F;en-us&#x2F;dotnet&#x2F;core&#x2F;testing&#x2F;microsoft-testing-platform-vs-vstest&quot;&gt;between them&lt;&#x2F;a&gt;, but for the most part, I was just looking to check out a new tool and try some stuff out. Also, I&#x27;d heard about &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;intro&quot;&gt;Tunit&lt;&#x2F;a&gt;, so I used it for a quick little project I had and figured that I could use a little practice setting up some CI pipelines.&lt;&#x2F;p&gt;
+&lt;p&gt;Reading documentation, it seemed mostly straightfoward to make the switch. Take out some NuGet packages you didn&#x27;t need anymore, update your project to output as an EXE, maybe add a couple of properties to your .csproj and things should Just Work. Except they didn&#x27;t. By default, stuff using MTP doesn&#x27;t output a &lt;code&gt;.trx&lt;&#x2F;code&gt; file, instead putting a &lt;code&gt;.log&lt;&#x2F;code&gt; file in a TestResults file where all the binaries are for that compilation. CI stuff seems like it still expects to see &lt;code&gt;.trx&lt;&#x2F;code&gt; files, which: totally understandable and correct. Not only has it been around for ages, it also has lots of detail, which the &lt;code&gt;.log&lt;&#x2F;code&gt; files don&#x27;t; they&#x27;re just pretty much the same high level output as you see on the console when running tests through &lt;code&gt;dotnet test&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The main trouble I ran into was getting &lt;code&gt;MSBUILD : error MSB1001: Unknown switch.&lt;&#x2F;code&gt; when trying arguments that each TUnit and XUnit suggest should work to get a &lt;code&gt;.trx&lt;&#x2F;code&gt; to be generated. Sleeping, more trial and error, and just doing the right searching on TUnit&#x27;s documentation site got me to where I saw that I was missing a required NuGet package, and after adding it both of the projects I was tinkering with started working as I wanted in my ci pipelines. I&#x27;ve since seen a note that I must have just glossed over in Tunits docs that would have saved me some time, but it was divorced enough from the context in my head for what I wanted (&quot;I need something to make this work on CI!&quot;), that I was blind to the context where the information was offered, and where it truthfully fits a lot better than where I imagined I wanted it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;azure-pipelines&quot;&gt;Azure Pipelines&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;yml&quot;&gt;- script: dotnet run --project .&#x2F;FreeEnterprise.Api.UnitTests&#x2F;FreeEnterprise.Api.UnitTests.csproj -c Release --report-trx --results-directory . --report-trx-filename results.trx
+  displayName: &amp;#39;Run tests&amp;#39;
+  continueOnError: false
+
+- task: PublishTestResults@2
+  displayName: &amp;#39;Publish Test Results&amp;#39;
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: &amp;#39;results.trx&amp;#39;
+    searchFolder: &amp;#39;.&amp;#39;
+    failTaskOnFailedTests: true
+    failTaskOnMissingResultsFile: true
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I could almost certainly specify things a bit less stringently. I&#x27;d started with sample code that I &lt;em&gt;mostly&lt;&#x2F;em&gt; copied from &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;intro&quot;&gt;Tunit&#x27;s Documentation&lt;&#x2F;a&gt; for &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;tunit.dev&#x2F;docs&#x2F;examples&#x2F;tunit-ci-pipeline&quot;&gt;TUnit in CI pipelines&lt;&#x2F;a&gt; and very much missed the part in the script step where the &lt;code&gt;--results-directory&lt;&#x2F;code&gt; gets set, but included the specified folder in the publish step, and the step kept failing, because it was looking in the wrong place. For what I&#x27;m doing, having the test results populate in the current directory is fine. I also had trouble having the script use &lt;code&gt;dotnet test&lt;&#x2F;code&gt; over &lt;code&gt;dotnet run&lt;&#x2F;code&gt;, even with using &lt;code&gt;-- --report-trx&lt;&#x2F;code&gt; as expected (and after adding the TrxReport nuget package) and work out on the CI servers, so &lt;code&gt;dontnet run&lt;&#x2F;code&gt; it is.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;csproj-files&quot;&gt;.csproj files&lt;&#x2F;h3&gt;
+&lt;p&gt;For reference, here are examples of the .csproj files for two different of my test projects, the first using TUnit, the second using XUnit.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;tunit&quot;&gt;TUnit&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;xml&quot;&gt;  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;!-- Minimim required --&amp;gt;
+    &amp;lt;OutputType&amp;gt;Exe&amp;lt;&#x2F;OutputType&amp;gt;
+  &amp;lt;&#x2F;PropertyGroup&amp;gt;
+  &amp;lt;!-- This is actually my entire ItemGroup for NuGet pacakges in this project --&amp;gt;
+  &amp;lt;ItemGroup&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Microsoft.Testing.Extensions.TrxReport&amp;quot; Version=&amp;quot;1.8.2&amp;quot; &#x2F;&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;TUnit&amp;quot; Version=&amp;quot;0.55.6&amp;quot; &#x2F;&amp;gt;
+  &amp;lt;&#x2F;ItemGroup&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;xunit&quot;&gt;XUnit&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;xml&quot;&gt;    &amp;lt;PropertyGroup&amp;gt;
+        &amp;lt;!-- 
+            Removing some not relevant things in the group
+        --&amp;gt;
+        &amp;lt;OutputType&amp;gt;Exe&amp;lt;&#x2F;OutputType&amp;gt;
+        &amp;lt;UseMicrosoftTestingPlatformRunner&amp;gt;true&amp;lt;&#x2F;UseMicrosoftTestingPlatformRunner&amp;gt;
+        &amp;lt;TestingPlatformDotnetTestSupport&amp;gt;true&amp;lt;&#x2F;TestingPlatformDotnetTestSupport&amp;gt;
+    &amp;lt;&#x2F;PropertyGroup&amp;gt;
+    &amp;lt;ItemGroup&amp;gt;
+        &amp;lt;!-- 
+            Again, minimal entries required are shown
+        --&amp;gt;
+        &amp;lt;PackageReference Include=&amp;quot;Microsoft.Testing.Extensions.TrxReport&amp;quot; &#x2F;&amp;gt;
+        &amp;lt;PackageReference Include=&amp;quot;xunit.v3&amp;quot; &#x2F;&amp;gt;
+    &amp;lt;&#x2F;ItemGroup&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>make code</title>
+        <published>2025-08-10T00:00:00+00:00</published>
+        <updated>2025-08-10T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/make-code/"/>
+        <id>https://antidale.com/blog/make-code/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/make-code/">&lt;p&gt;One of the things I find to be small hassle in using the dotnet cli for running projects via &lt;code&gt;dotnet run&lt;&#x2F;code&gt; is having to specify the target project as soon as I add some testing projects to the solution. I know I could always &lt;code&gt;cd&lt;&#x2F;code&gt; to the folder of the relevant &lt;code&gt;.csproj&lt;&#x2F;code&gt; file, but that&#x27;s roughly equal hassle, and I generally prefer to just stay at the root of a project most of the time. I took a little time recently to see if maybe things had changed and you could specify a default project in a &lt;code&gt;.sln&lt;&#x2F;code&gt; or &lt;code&gt;.slnx&lt;&#x2F;code&gt; file, but alas.&lt;&#x2F;p&gt;
+&lt;p&gt;However, this &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;59942079&quot;&gt;stack overflow answer suggesting using a Makefile&lt;&#x2F;a&gt; is a really good solution for me. As a solution, I think it is very customizable, less of a bother than making shell scripts for it, and clear what&#x27;s going on when you look at it. My favorite little thing is that running &lt;code&gt;make watch-test&lt;&#x2F;code&gt; doesn&#x27;t actually change the directory of the terminal, so when I stop running tests under the watch, I&#x27;m still at the directory root. Delightful!&lt;&#x2F;p&gt;
+&lt;p&gt;Here&#x27;s what I currently have going on in for the one place I&#x27;m currently using it (folder names redacted)&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code data-lang=&quot;make&quot;&gt;watch:
+	dotnet watch run --project .&#x2F;SomeFolder&#x2F;SomeFolder.csproj
+run:
+	dotnet run --project .&#x2F;SomeFolder&#x2F;SomeFolder.csproj
+watch-test:
+	cd .&#x2F;SomeFolder.UnitTests &amp;amp;&amp;amp; dotnet watch test
+outdated:
+	dotnet outdated -exc FluentAssertions
+outdated-upgrade:
+	dotnet outdated -exc FluentAssertions -u
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Second Step</title>
+        <published>2024-12-10T00:00:00+00:00</published>
+        <updated>2024-12-10T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Antidale
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://antidale.com/blog/second-step/"/>
+        <id>https://antidale.com/blog/second-step/</id>
+        
+        <content type="html" xml:base="https://antidale.com/blog/second-step/">&lt;p&gt;Today we&#x27;re adding just a little bit of structure to the page in a very basic navbar. I still have to think about how I want some things to go, but while I&#x27;m thinking, we can take a next step. Plus, putting into practice the bit of reading for how Zola handles images seemed like a decent idea.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
