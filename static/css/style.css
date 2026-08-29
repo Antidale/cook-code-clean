@@ -1,26 +1,27 @@
 html {
-  --background: #2b1c12;
-  --background-alt: #fff6e6;
+
+
+  --background-alt: #2b1c12;
+  --background: #e8e8e8;
   --primary-contrast: #90b695;
-  --primary: #658db8;
+  --primary: #1f3853;
   --accent: #fca05d;
-  --color: #f1f7ed;
-  /* --danger: #c52b2b; */
-  --shadow: #546a76;
+  --color: #454645;
+  --shadow: #546a76a2;
   --border: #546a76;
 
-  /* @media (prefers-color-scheme: dark) {
-    --background: #001b2e;
-    --background-alt: #07314e;
-    --primary: #84cbf3;
-    --primary-contrast: #001b2e;
-    --accent: #ffd9be;
-    --color: #ffffff;
-    --danger: #fdaeae;
-    --shadow: #3e5d70;
-    --border: #8b9398;
+  @media (prefers-color-scheme: dark) {
+    --background: #2b1c12;
+    --background-alt: #fff6e6;
+    --primary-contrast: #90b695;
+    --primary: #658db8;
+    --accent: #fca05d;
+    --color: #f1f7ed;
 
-  } */
+    --shadow: #546a76a2;
+    --border: #546a76;
+
+  }
 
   color: var(--color);
   background: var(--background);
@@ -104,16 +105,20 @@ pre {
 }
 
 .sidebar {
+
+
   ul {
     border: solid .15rem var(--border);
     border-radius: 6px;
-    margin: 1em;
+    margin: .5rem .25rem;
     list-style-type: none;
-    box-shadow: 5px 2px 2px 2px var(--shadow);
+    box-shadow: .25rem .25rem .1rem .1rem var(--shadow);
+    padding-bottom: .25rem;
   }
 
   li {
     padding-top: .25rem;
+    text-align: left;
   }
 
 }
