@@ -5,11 +5,32 @@
 <h1 class="title">
     {{ section.title }}
 </h1>
-<ul>
+<ul class="article-grid">
     <!-- If you are using pagination, section.pages will be empty.
        You need to use the paginator object -->
     {% for page in section.pages %}
-    <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
+    <li class="article-item">
+        <article class="card">
+            <div class="card-body">
+                <h3 class="card-title">
+                    <a href="{{ page.permalink | safe }}">
+                        {{ page.title }}
+                    </a>
+                    {% if page.extra.summary %}
+                    <p> {{ page.extra.summary }}</p>
+                    {% endif %}
+                    <p> {{ page.date }}</p>
+                    {% if page.taxonomies.tags %}
+                    <ul class="tag-list">
+                        {% for tag in page.taxonomies.tags %}
+                        <li><a href="/tags/{{tag}}">{{tag}}</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </h3>
+            </div>
+        </article>
+    </li>
     {% endfor %}
 </ul>
 {% endblock content %}

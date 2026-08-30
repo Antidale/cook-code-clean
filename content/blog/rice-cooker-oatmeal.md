@@ -3,6 +3,8 @@ title = "Rice Cooker Oatmeal"
 date = 2025-01-10
 [taxonomies]
 tags=["cook","recipe"]
+[extra]
+summary = "An easy vegan oatmeal to make in your rice cooker to have a couple days worth of breakfast handy"
 +++
 
 This is a nice recipe for getting your rice cooker to make you breakfast, and makes enough for me to get three breakfasts from it. I often set it up the night before and wake up to hot oatmeal in the winter, and then can decide to reheat the extra portions on subsequent days or just have the leftovers cold. This set assumes you're using a NS-ZCC10 from Zojirushi, check your own cooker's instrucions for porridge/oatmeal style options.
